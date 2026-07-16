@@ -1,0 +1,60 @@
+<div class="module-page">
+  <div class="module-card">
+    <div class="toolbar">
+      <h1>IUI List of Patient</h1>
+      <button type="button" class="btn-primary" (click)="addNew()">Add New</button>
+    </div>
+
+    @if (error) {
+      <p class="error">{{ error }}</p>
+    }
+    @if (success) {
+      <p class="success">{{ success }}</p>
+    }
+
+    @if (loading) {
+      <p class="muted">Loading IUI records…</p>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>IUI Id</th>
+              <th>IUI Indication</th>
+              <th>IUI Date</th>
+              <th>IUI Id Off</th>
+              <th>Post Treatment</th>
+              <th>Advice</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rows; track row.IUIID) {
+              <tr>
+                <td><button type="button" class="link" (click)="selectRow(row)">Select</button></td>
+                <td>{{ row.IUIID }}</td>
+                <td>{{ row.Indication || '—' }}</td>
+                <td>{{ row.IUIODateOfCreation | date:'dd-MMM-yyyy' }}</td>
+                <td>{{ row.IUIIDOff || '—' }}</td>
+                <td class="wide">{{ row.IUIOPostTreat || '—' }}</td>
+                <td class="wide">{{ row.IUIOAdvice || '—' }}</td>
+                <td><button type="button" class="link danger" (click)="deleteRow(row)">Delete</button></td>
+                <td>
+                  @if (isLocked(row)) {
+                    <button type="button" class="link" (click)="unlockRow(row)">Unlock</button>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="9" class="empty">No IUI records found for this patient.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

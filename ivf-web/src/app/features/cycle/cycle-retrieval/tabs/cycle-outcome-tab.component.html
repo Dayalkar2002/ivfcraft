@@ -1,0 +1,41 @@
+@if (loading) {
+  <p class="tab-loading">Loading outcome...</p>
+} @else {
+  <form [formGroup]="form" class="tab-form">
+    <section class="tab-section outcome-section">
+      <h3>Cycle Outcome</h3>
+      <div class="field-grid cols-4">
+        <label>Outcome Date<input type="date" formControlName="outcomeDate" /></label>
+        <label>BHCG Date<input type="date" formControlName="bhcgDate" /></label>
+        <label>BHCG Value<input type="number" formControlName="value" /></label>
+        <label>No. of Sacs<input type="number" formControlName="noSacs" /></label>
+        <label>PT Day<input type="number" formControlName="ptDay" /></label>
+        <label>Outcome
+          <select formControlName="outcome">
+            @for (o of outcomeOptions; track o.value) {
+              <option [ngValue]="o.value">{{ o.label }}</option>
+            }
+          </select>
+        </label>
+        <label>Pregnancy Option
+          <select formControlName="pregOpt">
+            @for (o of pregOptions; track o.value) {
+              <option [ngValue]="o.value">{{ o.label }}</option>
+            }
+          </select>
+        </label>
+        <label>Preg Delivery Opt<input type="number" formControlName="pregDelOpt" /></label>
+      </div>
+
+      <label class="span-full">Post Treatment<textarea formControlName="postTreatment" rows="3"></textarea></label>
+      <label class="span-full">Advice<textarea formControlName="advice" rows="5"></textarea></label>
+      <label class="span-full">Treatment<textarea formControlName="treatment" rows="3"></textarea></label>
+    </section>
+
+    @if (error) { <div class="alert error">{{ error }}</div> }
+    @if (success) { <div class="alert success">{{ success }}</div> }
+    <div class="tab-actions">
+      <button type="button" class="btn btn-save" (click)="save()" [disabled]="saving">Save Outcome</button>
+    </div>
+  </form>
+}

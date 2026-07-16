@@ -1,0 +1,43 @@
+<div class="module-page">
+  <div class="module-card">
+    <div class="toolbar">
+      <div>
+        <a routerLink="/iui" class="back-link">← Back to IUI List</a>
+        <h1>{{ isNew ? 'New IUI Entry' : (isDeleteMode ? 'Delete IUI Record' : 'Edit IUI Entry') }}</h1>
+      </div>
+    </div>
+
+    @if (error) { <p class="error">{{ error }}</p> }
+    @if (success) { <p class="success">{{ success }}</p> }
+    @if (loading) { <p class="muted">Loading…</p> }
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <section class="section">
+        <h2>IUI Outcome</h2>
+        <div class="form-grid">
+          <label>IUI Id<input formControlName="iuiId" readonly /></label>
+          <label>IUI Id Off<input formControlName="iuiIdOff" /></label>
+          <label>IUI Date<input type="date" formControlName="iuiDate" /></label>
+          <label>Outcome Date<input type="date" formControlName="iuiODate" /></label>
+          <label>Value<input type="number" formControlName="iuioValue" /></label>
+          <label>No. of Sac<input type="number" formControlName="iuioNoSac" /></label>
+          <label>Post IUI Day<input type="number" formControlName="iuioPostIuiDay" /></label>
+          <label>Outcome<select formControlName="iuioOutcome"><option [value]="0">Negative</option><option [value]="1">Positive</option></select></label>
+          <label>Pregnancy Option<select formControlName="iuioPregOpt"><option [value]="0">—</option><option [value]="1">Clinical</option><option [value]="2">Biochemical</option><option [value]="3">Delivered</option></select></label>
+          <label>Delivery Option<select formControlName="iuioPregDelOpt"><option [value]="0">—</option><option [value]="1">Live Birth</option><option [value]="2">Miscarriage</option></select></label>
+          <label class="full">Post Treatment<textarea rows="4" formControlName="iuioPostTreat"></textarea></label>
+          <label class="full">Advice<textarea rows="3" formControlName="iuioAdvice"></textarea></label>
+        </div>
+      </section>
+
+      <p class="note">Analysis, uterus/ovaries, procedure details, and follicular study sections from the legacy IUI module will be added in a follow-up. Outcome save uses <code>spIUIOutCome</code>.</p>
+
+      <div class="actions">
+        @if (!isDeleteMode) {
+          <button type="submit" [disabled]="saving">{{ saving ? 'Saving…' : (isNew ? 'Submit' : 'Update') }}</button>
+        }
+        <button type="button" class="muted" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

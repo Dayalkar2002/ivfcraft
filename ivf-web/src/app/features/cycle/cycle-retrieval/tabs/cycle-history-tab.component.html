@@ -1,0 +1,90 @@
+@if (loading) {
+  <p class="tab-loading">Loading history...</p>
+} @else {
+  <form [formGroup]="form" class="tab-form">
+    <section class="tab-section history-section">
+      <h3>Patient History</h3>
+      <div class="field-grid cols-4">
+        <label>Height (cm)<input type="number" formControlName="height" (input)="calcBmi()" /></label>
+        <label>Weight (kg)<input type="number" formControlName="weight" (input)="calcBmi()" /></label>
+        <label>BMI<input type="number" formControlName="bmi" readonly /></label>
+        <label>Allergy
+          <select formControlName="allergyId">
+            <option [ngValue]="0">Select</option>
+            @for (a of masters.allergies; track a.id) {
+              <option [ngValue]="a.id">{{ a.name }}</option>
+            }
+          </select>
+        </label>
+        <label class="span-2">Med / Surgical History<textarea formControlName="medSurHistory" rows="2"></textarea></label>
+        <label>ISG<input type="number" formControlName="isg" /></label>
+        <label>ISP<input type="number" formControlName="isp" /></label>
+        <label>IS Ab<input type="number" formControlName="isAb" /></label>
+        <label>IS Ect<input type="number" formControlName="isEct" /></label>
+        <label>IS Duration<input type="number" formControlName="isDuration" /></label>
+        <label>LMP<input type="date" formControlName="hlmp" /></label>
+        <label>HSG<input type="text" formControlName="hsg" /></label>
+        <label>Indication<input type="text" formControlName="indication" /></label>
+        <label>Stim Protocol
+          <select formControlName="stimProtId">
+            <option [ngValue]="0">Select</option>
+            @for (s of masters.stimProtocols; track s.id) {
+              <option [ngValue]="s.id">{{ s.name }}</option>
+            }
+          </select>
+        </label>
+        <label>Attempts<input type="number" formControlName="attemptCount" /></label>
+        <label>Prev Attempts<input type="number" formControlName="attemptPrev" /></label>
+        <label>EW Attempts<input type="number" formControlName="attemptEw" /></label>
+        <label>Current Date<input type="date" formControlName="currentDate" /></label>
+      </div>
+
+      <div class="checkbox-group" formGroupName="findings">
+        <span class="group-label">Findings:</span>
+        <label><input type="checkbox" formControlName="idiopathic" /> Idiopathic</label>
+        <label><input type="checkbox" formControlName="if" /> IF</label>
+        <label><input type="checkbox" formControlName="mf" /> MF</label>
+        <label><input type="checkbox" formControlName="dor" /> DOR</label>
+        <label><input type="checkbox" formControlName="ovu" /> Ovu</label>
+        <label><input type="checkbox" formControlName="tf" /> TF</label>
+        <label><input type="checkbox" formControlName="cf" /> CF</label>
+        <label><input type="checkbox" formControlName="endo" /> Endo</label>
+        <label><input type="checkbox" formControlName="other" /> Other</label>
+      </div>
+      <label class="span-full">Other Findings<input type="text" formControlName="otherTxt" /></label>
+      <label class="span-full">Comments<textarea formControlName="comments" rows="2"></textarea></label>
+    </section>
+
+    <section class="tab-section attempts-section">
+      <h3>Previous Cycle Attempts</h3>
+      <div formArrayName="historyAttempts">
+        @for (row of historyAttempts.controls; track $index; let i = $index) {
+          <div class="attempt-row" [formGroupName]="i">
+            <input type="date" formControlName="cycleDate" placeholder="Cycle Date" />
+            <label class="chk"><input type="checkbox" formControlName="ivf" /> IVF</label>
+            <label class="chk"><input type="checkbox" formControlName="icsi" /> ICSI</label>
+            <select formControlName="stimProtId">
+              <option [ngValue]="0">Stim Protocol</option>
+              @for (s of masters.stimProtocols; track s.id) {
+                <option [ngValue]="s.id">{{ s.name }}</option>
+              }
+            </select>
+            <input type="date" formControlName="lmp" placeholder="LMP" />
+            <input type="number" formControlName="oocytes" placeholder="Oocytes" />
+            <input type="number" formControlName="fertilized" placeholder="Fertilized" />
+            <input type="number" formControlName="he2" placeholder="E2" />
+            <input type="number" formControlName="lh" placeholder="LH" />
+            <input type="text" formControlName="remark" placeholder="Remark" class="span-2" />
+          </div>
+        }
+      </div>
+      <button type="button" class="btn-add" (click)="addAttempt()">+ Add Attempt</button>
+    </section>
+
+    @if (error) { <div class="alert error">{{ error }}</div> }
+    @if (success) { <div class="alert success">{{ success }}</div> }
+    <div class="tab-actions">
+      <button type="button" class="btn btn-save" (click)="save()" [disabled]="saving">Save History</button>
+    </div>
+  </form>
+}

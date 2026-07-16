@@ -1,0 +1,142 @@
+<div class="module-page">
+  <div class="module-card">
+    <h1>Blastocyst Transfer (BT)</h1>
+
+    @if (error) { <p class="error">{{ error }}</p> }
+    @if (success) { <p class="success">{{ success }}</p> }
+    @if (loading) { <p class="muted">Loading…</p> }
+
+    <div class="cycle-select">
+      <label>
+        Select Cycle Date
+        <select [formControl]="cycleForm.controls.cycId" (change)="onCycleChange($event)">
+          <option value="">Select Cycle Date</option>
+          @for (item of cycleDates; track item.cycId) {
+            <option [value]="item.cycId">{{ item.label | date:'dd-MMM-yyyy' }}</option>
+          }
+        </select>
+      </label>
+      @if (cycleForm.value.btId) {
+        <span class="record-id">BT Id: <strong>{{ cycleForm.value.btId }}</strong></span>
+      }
+    </div>
+
+    @if (showForm) {
+      <nav class="tabs">
+        <button type="button" [class.active]="activeTab === 'transfer'" (click)="setTab('transfer')">Transfer Note</button>
+        <button type="button" [class.active]="activeTab === 'blastocysts'" (click)="setTab('blastocysts')">Blastocyst Details</button>
+        <button type="button" [class.active]="activeTab === 'summary'" (click)="setTab('summary')">Summary</button>
+      </nav>
+
+      @if (activeTab === 'transfer') {
+        <form [formGroup]="transferForm" class="tab-panel">
+          <section class="section">
+            <h2>Transfer Note</h2>
+            <div class="form-grid">
+              <label>Transfer Date<input type="date" formControlName="transferDate" /></label>
+              <label>Surgeon<select formControlName="surgeon"><option [value]="0">Select</option>@for (d of doctors; track d.id) { <option [value]="d.id">{{ d.name }}</option> }</select></label>
+              <label>Embryologist<input type="text" formControlName="embryologist" /></label>
+              <label>Diagnosis<input type="text" formControlName="diagnosis" /></label>
+              <label>Procedure<input type="text" formControlName="procedure" /></label>
+              <label>Anesthesia<select formControlName="anesthesia"><option [value]="0">None</option><option [value]="1">Local</option><option [value]="2">General</option><option [value]="3">Other</option></select></label>
+              <label>Depth of Placement<input type="number" formControlName="depthOfPlacement" /></label>
+              <label>Blood on Catheter<select formControlName="bloodOnCatheter"><option [value]="0">No</option><option [value]="1">Yes</option></select></label>
+              <label>Embryos Remaining<select formControlName="embryoRemaining"><option [value]="0">No</option><option [value]="1">Yes</option></select></label>
+              <label class="span-2">Comments<textarea formControlName="comments" rows="2"></textarea></label>
+            </div>
+          </section>
+          <section class="section">
+            <h2>Catheter &amp; Lab</h2>
+            <div class="form-grid">
+              <label class="check"><input type="checkbox" formControlName="catheterCcd" /> CCD</label>
+              <label class="check"><input type="checkbox" formControlName="catheterSoftPass" /> Soft Pass</label>
+              <label class="check"><input type="checkbox" formControlName="catheterCook" /> Cook</label>
+              <label>Protocol<select formControlName="protocolUsed">@for (p of protocolOptions; track p.id) { <option [value]="p.id">{{ p.name }}</option> }</select></label>
+              <label>Media<select formControlName="mediaUsed">@for (m of mediaOptions; track m.id) { <option [value]="m.id">{{ m.name }}</option> }</select></label>
+              <label>Procedure Done By<input type="text" formControlName="procedureDoneBy" /></label>
+            </div>
+          </section>
+        </form>
+      }
+
+      @if (activeTab === 'blastocysts') {
+        <div class="tab-panel">
+          <div class="grid-toolbar">
+            <button type="button" (click)="addBlastocystRow()">Add Blastocyst Row</button>
+          </div>
+          @if (blastocystRows.length === 0) {
+            <p class="muted empty-hint">No blastocyst rows yet. Click "Add Blastocyst Row" to begin.</p>
+          } @else {
+            <div class="embryo-table-wrap">
+              <table class="embryo-table">
+                <thead>
+                  <tr>
+                    <th>Source</th>
+                    <th>Celler</th>
+                    <th>Grade</th>
+                    <th>TE Grade</th>
+                    <th>Action</th>
+                    <th>Location</th>
+                    <th>Remark</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of blastocystRows; track $index) {
+                    <tr>
+                      <td><input type="text" [(ngModel)]="row.source" [ngModelOptions]="{standalone: true}" /></td>
+                      <td>
+                        <select [(ngModel)]="row.celler" [ngModelOptions]="{standalone: true}">
+                          @for (c of cellerOptions; track c.id) { <option [value]="c.id">{{ c.name }}</option> }
+                        </select>
+                      </td>
+                      <td>
+                        <select [(ngModel)]="row.grade" [ngModelOptions]="{standalone: true}">
+                          @for (g of gradeOptions; track g.id) { <option [value]="g.id">{{ g.name }}</option> }
+                        </select>
+                      </td>
+                      <td>
+                        <select [(ngModel)]="row.teGrade" [ngModelOptions]="{standalone: true}">
+                          @for (g of gradeOptions; track g.id) { <option [value]="g.id">{{ g.name }}</option> }
+                        </select>
+                      </td>
+                      <td>
+                        <select [(ngModel)]="row.action" [ngModelOptions]="{standalone: true}">
+                          @for (a of actionOptions; track a.id) { <option [value]="a.id">{{ a.name }}</option> }
+                        </select>
+                      </td>
+                      <td><input type="text" [(ngModel)]="row.location" [ngModelOptions]="{standalone: true}" /></td>
+                      <td><input type="text" [(ngModel)]="row.remark" [ngModelOptions]="{standalone: true}" /></td>
+                      <td><button type="button" class="btn-remove" (click)="removeBlastocystRow($index)">×</button></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      }
+
+      @if (activeTab === 'summary') {
+        <form [formGroup]="summaryForm" class="tab-panel">
+          <section class="section">
+            <h2>Blastocyst Summary</h2>
+            <div class="form-grid">
+              <label>Transfer<input type="number" formControlName="transfer" /></label>
+              <label>Freeze<input type="number" formControlName="freeze" /></label>
+              <label>Blastocyst<input type="number" formControlName="blastocyst" /></label>
+              <label>Stuck<input type="number" formControlName="stuck" /></label>
+              <label>Discard<input type="number" formControlName="discard" /></label>
+              <label class="span-2">Remark<textarea formControlName="remark" rows="2"></textarea></label>
+            </div>
+          </section>
+        </form>
+      }
+
+      <div class="actions sticky">
+        <button type="button" (click)="save()" [disabled]="saving">{{ saving ? 'Saving…' : (isUpdate ? 'Update' : 'Submit') }}</button>
+        <button type="button" class="muted" (click)="cancel()">Cancel</button>
+      </div>
+    }
+  </div>
+</div>

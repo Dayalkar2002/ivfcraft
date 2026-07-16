@@ -1,0 +1,105 @@
+<div class="modal-overlay" (click)="close()" role="dialog" aria-modal="true" aria-labelledby="patient-select-title">
+  <div class="patient-modal" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <div class="header-text">
+        <h2 id="patient-select-title">Select Patient</h2>
+        <p>Choose satellite clinic, then search and select a patient to continue.</p>
+      </div>
+      <button type="button" class="icon-close" (click)="close()" aria-label="Close">×</button>
+    </header>
+
+    <div class="modal-toolbar" [formGroup]="form">
+      <div class="field satellite-field">
+        <label for="satellite-select">Satellite Clinic</label>
+        <select id="satellite-select" formControlName="satelliteId" (change)="onSatelliteChange($event)">
+          <option value="">Select satellite</option>
+          @if (satellites$ | async; as satellites) {
+            @for (sat of satellites; track sat.id) {
+              <option [value]="sat.id">{{ sat.name }}</option>
+            }
+          }
+        </select>
+      </div>
+
+      <div class="field search-field">
+        <label for="patient-search">Search by Name / UHID / Aadhaar / Partner</label>
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input
+            id="patient-search"
+            type="search"
+            formControlName="search"
+            placeholder="Type to filter patients instantly…"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+    </div>
+
+    @if (error$ | async; as error) {
+      <div class="alert error">{{ error }}</div>
+    }
+
+    <div class="list-meta">
+      @if (loading$ | async) {
+        <span class="meta-loading">Loading patients…</span>
+      } @else {
+        <span>{{ listMessage }}</span>
+      }
+    </div>
+
+    <div class="patient-list" role="listbox" aria-label="Patient list">
+      @if (loading$ | async) {
+        <div class="state-card">
+          <div class="spinner"></div>
+          <p>Fetching patient records…</p>
+        </div>
+      } @else if (!filteredPatients.length) {
+        <div class="state-card empty">
+          <p>{{ listMessage }}</p>
+        </div>
+      } @else {
+        @for (p of filteredPatients; track p.id) {
+          <button
+            type="button"
+            class="patient-card"
+            [class.selected]="selectedPatientId === p.id"
+            (click)="pickPatient(p)"
+            (dblclick)="pickPatient(p); confirmSelection()"
+            role="option"
+            [attr.aria-selected]="selectedPatientId === p.id"
+          >
+            <div class="avatar">{{ patientInitials(p.name) }}</div>
+            <div class="patient-details">
+              <div class="name-row">
+                <strong>{{ p.name }}</strong>
+                @if (p.category) {
+                  <span class="chip">{{ p.category }}</span>
+                }
+                @if (p.isOocyteDonor) {
+                  <span class="chip donor">Oocyte Donor</span>
+                }
+              </div>
+              <div class="meta-row">
+                <span>UHID: {{ p.uhid || '—' }}</span>
+                <span>Partner: {{ p.partner || '—' }}</span>
+                <span>Age: {{ formatAge(p.age) }}</span>
+              </div>
+              @if (p.aadhar) {
+                <div class="aadhar-row">Aadhaar: {{ p.aadhar }}</div>
+              }
+            </div>
+            <span class="select-indicator" aria-hidden="true">✓</span>
+          </button>
+        }
+      }
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn-secondary" (click)="close()">Cancel</button>
+      <button type="button" class="btn-primary" [disabled]="!selectedPatientId" (click)="confirmSelection()">
+        Continue with Selected Patient
+      </button>
+    </footer>
+  </div>
+</div>

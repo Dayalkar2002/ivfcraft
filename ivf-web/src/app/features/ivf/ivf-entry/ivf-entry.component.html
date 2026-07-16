@@ -1,0 +1,123 @@
+<div class="module-page">
+  <div class="module-card">
+    <h1>IVF Entry Module</h1>
+
+    @if (error) { <p class="error">{{ error }}</p> }
+    @if (success) { <p class="success">{{ success }}</p> }
+    @if (loading && showForm) { <p class="muted">Loading cycle data…</p> }
+
+    <div class="cycle-select">
+      <label>
+        Select Cycle Date
+        <select [formControl]="form.controls.cycId" (change)="onCycleChange($event)">
+          <option value="">Select Cycle Date</option>
+          @for (item of cycleDates; track item.cycId) {
+            <option [value]="item.cycId">{{ item.label | date:'dd-MMM-yyyy' }}</option>
+          }
+        </select>
+      </label>
+      @if (form.value.ivfId) {
+        <span class="ivf-id">IVF Id: <strong>{{ form.value.ivfId }}</strong></span>
+      }
+    </div>
+
+    @if (showForm) {
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <section class="section">
+          <h2>Stimulation For Donor</h2>
+          <div class="form-grid">
+            <label class="check"><input type="checkbox" formControlName="gnrhFollicular" /> Follicular</label>
+            <label class="check"><input type="checkbox" formControlName="gnrhLuteal" /> Luteal</label>
+            <label class="check"><input type="checkbox" formControlName="gnrhStopL" /> Stop L</label>
+            <label class="check"><input type="checkbox" formControlName="gnrhNone" /> None</label>
+            <label>FSH Drug 1<input type="number" formControlName="fshDrug1" (input)="updateBalance()" /></label>
+            <label>FSH Drug 2<input type="number" formControlName="fshDrug2" /></label>
+            <label>HMG Drug 1<input type="number" formControlName="hmgDrug1" /></label>
+            <label>HMG Drug 2<input type="number" formControlName="hmgDrug2" /></label>
+            <label class="check"><input type="checkbox" formControlName="otherCycle" /> Other</label>
+            <label>Other Value<input type="number" formControlName="otherCycleVal" /></label>
+            <label class="check"><input type="checkbox" formControlName="naturalCycle" /> Natural Cycle</label>
+            <label>E2 Pattern 1<input type="number" formControlName="e2Pattern1" /></label>
+            <label>E2 Pattern 2<input type="number" formControlName="e2Pattern2" /></label>
+            <label>E2 Pattern 3<input type="number" formControlName="e2Pattern3" /></label>
+            <label>E2 Pattern 4<input type="number" formControlName="e2Pattern4" /></label>
+            <label>Days Stimulation<input type="number" formControlName="daysStimulation" /></label>
+            <label>Interval to HCG<input type="number" formControlName="intervalToHcg" /></label>
+            <label>Interval HCG (Hrs)<input type="number" formControlName="intervalFromHcgHrs" /></label>
+            <label>Interval HCG (Min)<input type="number" formControlName="intervalFromHcgMin" /></label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Procedure</h2>
+          <div class="form-grid">
+            <label>Insemination (hrs)<input type="number" formControlName="inseminationHours" /></label>
+            <label class="check"><input type="checkbox" formControlName="concStandard" /> Standard</label>
+            <label class="check"><input type="checkbox" formControlName="concHigh" /> High</label>
+            <label class="check"><input type="checkbox" formControlName="concIcsi" /> ICSI</label>
+            <label class="check"><input type="checkbox" formControlName="spAssHatch" /> Assisted Hatching</label>
+            <label class="check"><input type="checkbox" formControlName="spEmbryoBiopsy" /> Embryo Biopsy</label>
+            <label class="check"><input type="checkbox" formControlName="spImsi" /> IMSI</label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Personnel &amp; Lab</h2>
+          <div class="form-grid">
+            <label>Retrieval<select formControlName="retPerId"><option [value]="0">Select</option>@for (d of doctors; track d.id) { <option [value]="d.id">{{ d.name }}</option> }</select></label>
+            <label>Transfer<select formControlName="transPerId"><option [value]="0">Select</option>@for (d of doctors; track d.id) { <option [value]="d.id">{{ d.name }}</option> }</select></label>
+            <label>Lab Op.<select formControlName="labOptId"><option [value]="0">Select</option>@for (d of labOptions; track d.id) { <option [value]="d.id">{{ d.name }}</option> }</select></label>
+            <label>Media Brand<select formControlName="mediaBrand"><option [value]="0">Select</option>@for (d of mediaBrand; track d.id) { <option [value]="d.id">{{ d.name }}</option> }</select></label>
+            <label>Media Series<select formControlName="mediaSeries"><option [value]="0">Select</option>@for (d of mediaSeries; track d.id) { <option [value]="d.id">{{ d.name }}</option> }</select></label>
+            <label>Incubator<select formControlName="incubatorUsed"><option [value]="0">Select</option>@for (d of incubator; track d.id) { <option [value]="d.id">{{ d.name }}</option> }</select></label>
+            <label>Gas<select formControlName="gas"><option [value]="0">Select</option>@for (d of gas; track d.id) { <option [value]="d.id">{{ d.name }}</option> }</select></label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Oocytes Identified</h2>
+          <div class="form-grid compact">
+            <label>Metaphase II<input type="number" formControlName="oiMetaII" (input)="updateBalance()" /></label>
+            <label>Metaphase I<input type="number" formControlName="oiMetaI" (input)="updateBalance()" /></label>
+            <label>GV<input type="number" formControlName="oiGV" (input)="updateBalance()" /></label>
+            <label>DEG/Empty<input type="number" formControlName="oiDeg" /></label>
+          </div>
+          @if (balanceText) { <p class="balance">{{ balanceText }}</p> }
+        </section>
+
+        <section class="section">
+          <h2>Fertilization – Metaphase II</h2>
+          <div class="form-grid compact">
+            <label>0pb<input type="number" formControlName="fMetaII0pb" (input)="updateBalance()" /></label>
+            <label>0PN<input type="number" formControlName="fMetaII0PN" (input)="updateBalance()" /></label>
+            <label>1PN<input type="number" formControlName="fMetaII1PN" (input)="updateBalance()" /></label>
+            <label>2PN<input type="number" formControlName="fMetaII2PN" (input)="updateBalance()" /></label>
+            <label>3PN<input type="number" formControlName="fMetaII3PN" (input)="updateBalance()" /></label>
+            <label>Stuck<input type="number" formControlName="fMetaIIStuck" /></label>
+            <label class="check"><input type="checkbox" formControlName="fMetaIICont" /> Cont.</label>
+            <label>Cleaved<input type="number" formControlName="fMetaIICleaved" /></label>
+            <label>RI Allocated<input type="number" formControlName="riMetaIIAllocated" /></label>
+            <label>RI Rescued<input type="number" formControlName="riMetaIIRescued" /></label>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Fertilization – Metaphase I / GV</h2>
+          <div class="form-grid compact">
+            <label>Meta I 2PN<input type="number" formControlName="fMetaI2PN" (input)="updateBalance()" /></label>
+            <label>Meta I Cleaved<input type="number" formControlName="fMetaICleaved" /></label>
+            <label>GV 2PN<input type="number" formControlName="fGV2PN" (input)="updateBalance()" /></label>
+            <label>GV Cleaved<input type="number" formControlName="fGVCleaved" /></label>
+            <label>RI Meta I Alloc<input type="number" formControlName="riMetaIAllocated" /></label>
+            <label>RI GV Alloc<input type="number" formControlName="riGVAllocated" /></label>
+          </div>
+        </section>
+
+        <div class="actions">
+          <button type="submit" [disabled]="saving">{{ saving ? 'Saving…' : (isUpdate ? 'Update' : 'Submit') }}</button>
+          <button type="button" class="muted" (click)="cancel()">Cancel</button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="master-page">
+  <div class="master-card">
+    <h1>Doctor Master</h1>
+    @if (error) { <p class="error">{{ error }}</p> }
+
+    <form [formGroup]="form" class="form-grid" (ngSubmit)="submit()">
+      <label>Name <input formControlName="name" /></label>
+      <label>City <input formControlName="city" /></label>
+      <label>Phone <input formControlName="phone" /></label>
+      <label>Mobile <input formControlName="mobile" /></label>
+      <label>Email <input formControlName="email" /></label>
+      <label>Degree <input formControlName="degree" /></label>
+      <label>Speciality <input formControlName="speciality" /></label>
+      <label>Pager <input formControlName="pager" /></label>
+      <label class="full">Address 1 <input formControlName="address1" /></label>
+      <label>Address 2 <input formControlName="address2" /></label>
+      <label>Address 3 <input formControlName="address3" /></label>
+      <div class="actions full">
+        <button type="submit" [disabled]="saving">{{ form.value.docId ? 'Update' : 'Submit' }}</button>
+        <button type="button" class="muted" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+
+    <table>
+      <thead><tr><th>Select</th><th>Name</th><th>City</th><th>Phone</th><th>Mobile</th><th>Email</th></tr></thead>
+      <tbody>
+        @for (row of rows; track row.id) {
+          <tr>
+            <td><button type="button" class="link" (click)="selectRow(row)">Select</button></td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.city }}</td>
+            <td>{{ row.phone }}</td>
+            <td>{{ row.mobile }}</td>
+            <td>{{ row.email }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="empty">No doctors found.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

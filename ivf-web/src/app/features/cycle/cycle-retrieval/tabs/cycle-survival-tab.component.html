@@ -1,0 +1,66 @@
+@if (loading) {
+  <p class="tab-loading">Loading survival report...</p>
+} @else {
+  <form [formGroup]="form" class="tab-form">
+    <section class="tab-section survival-section">
+      <h3>Semen Analysis</h3>
+      <div class="field-grid cols-4">
+        <label>Conc<input type="number" formControlName="conc" step="0.01" /></label>
+        <label>Motility %<input type="number" formControlName="motility" /></label>
+        <label>NMPH 1<input type="number" formControlName="nmph1" /></label>
+        <label>NMPH 2<input type="number" formControlName="nmph2" /></label>
+        <label>Date<input type="date" formControlName="date" /></label>
+        <label>Recovery<input type="text" formControlName="recovery" /></label>
+        <label>Antibodies<input type="text" formControlName="antibodies" /></label>
+      </div>
+
+      <div class="checkbox-group" formGroupName="saResult">
+        <span class="group-label">SA Result:</span>
+        <label><input type="checkbox" formControlName="positive" /> Positive</label>
+        <label><input type="checkbox" formControlName="borderline" /> Borderline</label>
+        <label><input type="checkbox" formControlName="negative" /> Negative</label>
+      </div>
+
+      <div class="checkbox-group" formGroupName="gnrh">
+        <span class="group-label">GnRH:</span>
+        <label><input type="checkbox" formControlName="none" /> None</label>
+        <label><input type="checkbox" formControlName="stopLupron" /> Stop Lupron</label>
+        <label><input type="checkbox" formControlName="luteal" /> Luteal</label>
+      </div>
+      <label class="chk-inline"><input type="checkbox" formControlName="dosage" /> Dosage</label>
+
+      <div class="checkbox-group" formGroupName="spermSource">
+        <span class="group-label">Sperm Source:</span>
+        <label><input type="checkbox" formControlName="donor" /> Donor</label>
+        <label><input type="checkbox" formControlName="donorCryo" /> Donor Cryo</label>
+        <label><input type="checkbox" formControlName="husband" /> Husband</label>
+        <label><input type="checkbox" formControlName="husbandCryo" /> Husband Cryo</label>
+      </div>
+
+      <div class="checkbox-group" formGroupName="transferType">
+        <span class="group-label">Transfer Type:</span>
+        <label><input type="checkbox" formControlName="ivf" /> IVF</label>
+        <label><input type="checkbox" formControlName="gift" /> GIFT</label>
+        <label><input type="checkbox" formControlName="zift" /> ZIFT</label>
+        <label><input type="checkbox" formControlName="cryoAll" /> Cryo All</label>
+      </div>
+
+      <div class="checkbox-group" formGroupName="consent">
+        <span class="group-label">Consent:</span>
+        <label><input type="checkbox" formControlName="icsi" /> ICSI</label>
+        <label><input type="checkbox" formControlName="hatching" /> Assisted Hatching</label>
+        <label><input type="checkbox" formControlName="cryo" /> Cryo</label>
+        <label><input type="checkbox" formControlName="immatures" /> Immatures</label>
+        <label><input type="checkbox" formControlName="apa" /> APA</label>
+      </div>
+
+      <label class="span-full">Comments<textarea formControlName="comments" rows="3"></textarea></label>
+    </section>
+
+    @if (error) { <div class="alert error">{{ error }}</div> }
+    @if (success) { <div class="alert success">{{ success }}</div> }
+    <div class="tab-actions">
+      <button type="button" class="btn btn-save" (click)="save()" [disabled]="saving">Save Survival Report</button>
+    </div>
+  </form>
+}

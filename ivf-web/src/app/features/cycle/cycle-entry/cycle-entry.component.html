@@ -1,0 +1,136 @@
+<div class="cycle-page">
+  <div class="page-header">
+    <h1>CYCLE ENTRY MODULE</h1>
+    <div class="page-meta">
+      <span>Date: {{ today | date:'dd-MMM-yyyy' }}</span>
+    </div>
+  </div>
+
+  <div class="info-banner">
+    <span class="bulb">💡</span>
+    Select the appropriate options below. Based on your selection, the next screen will open for further data entry.
+  </div>
+
+  <form [formGroup]="form">
+    <div class="selection-panels">
+      <div class="panel panel-oocyte">
+        <h2>OOCYTE SOURCE</h2>
+        <div class="panel-options">
+          @if (oocyteSources$ | async; as sources) {
+            @for (opt of sources; track opt.id) {
+              <label class="radio-card" [class.selected]="oocyteSource === opt.id">
+                <input type="radio" formControlName="oocyteSource" [value]="opt.id" />
+                <div class="radio-content">
+                  <span class="radio-icon">🥚</span>
+                  <div>
+                    <strong>{{ opt.label }}</strong>
+                    <small>{{ opt.description }}</small>
+                  </div>
+                </div>
+              </label>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="panel panel-semen">
+        <h2>SEMEN SOURCE</h2>
+        <div class="panel-options">
+          @if (semenSources$ | async; as sources) {
+            @for (opt of sources; track opt.id) {
+              <label class="radio-card" [class.selected]="semenSource === opt.id">
+                <input type="radio" formControlName="semenSource" [value]="opt.id" />
+                <div class="radio-content">
+                  <span class="radio-icon">🧪</span>
+                  <div>
+                    <strong>{{ opt.label }}</strong>
+                    <small>{{ opt.description }}</small>
+                  </div>
+                </div>
+              </label>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-sections">
+      <div class="detail-section section-donor" [class.disabled]="isSectionDisabled('donor_oocyte')">
+        <h3>DONOR OOCYTE DETAILS</h3>
+        <div class="fields">
+          <label>Donor ID<input type="text" formControlName="donorId" [readonly]="isSectionDisabled('donor_oocyte')" /></label>
+          <label>Donor Name<input type="text" formControlName="donorName" [readonly]="isSectionDisabled('donor_oocyte')" /></label>
+          <label>No. of Oocytes<input type="number" formControlName="oocyteCount" [readonly]="isSectionDisabled('donor_oocyte')" /></label>
+          <label>No. of Recipients<input type="number" formControlName="recipientCount" [readonly]="isSectionDisabled('donor_oocyte')" /></label>
+        </div>
+      </div>
+
+      <div class="detail-section section-recipient" [class.disabled]="isSectionDisabled('oocyte_recipient')">
+        <h3>OOCYTE RECIPIENT DETAILS</h3>
+        <div class="fields">
+          <label>Received From Donor ID<input type="text" formControlName="receivedFromDonorId" [readonly]="isSectionDisabled('oocyte_recipient')" /></label>
+          <label>Donor Name<input type="text" formControlName="receivedDonorName" [readonly]="isSectionDisabled('oocyte_recipient')" /></label>
+          <label>No. of Oocytes<input type="number" formControlName="receivedOocyteCount" [readonly]="isSectionDisabled('oocyte_recipient')" /></label>
+        </div>
+      </div>
+
+      <div class="detail-section section-embryo" [class.disabled]="isSectionDisabled('embryo_recipient')">
+        <h3>EMBRYO RECIPIENT DETAILS</h3>
+        <div class="fields">
+          <label>Embryo Donor Couple ID<input type="text" formControlName="embryoDonorCoupleId" [readonly]="isSectionDisabled('embryo_recipient')" /></label>
+          <label>Donor Couple Name<input type="text" formControlName="donorCoupleName" [readonly]="isSectionDisabled('embryo_recipient')" /></label>
+          <label>Embryo Batch No.<input type="text" formControlName="embryoBatchNo" [readonly]="isSectionDisabled('embryo_recipient')" /></label>
+          <label>Oocyte Donor ID<input type="text" formControlName="oocyteDonorId" [readonly]="isSectionDisabled('embryo_recipient')" /></label>
+          <label>Semen Donor ID<input type="text" formControlName="semenDonorId" [readonly]="isSectionDisabled('embryo_recipient')" /></label>
+        </div>
+      </div>
+
+      <div class="detail-section section-semen" [class.disabled]="isSectionDisabled('semen_donor')">
+        <h3>SEMEN DONOR / CRYO DETAILS</h3>
+        <div class="fields">
+          <label>Donor Semen ID<input type="text" formControlName="donorSemenId" [readonly]="isSectionDisabled('semen_donor')" /></label>
+          <label>Cryo Straw No.<input type="text" formControlName="cryoStrawNo" [readonly]="isSectionDisabled('semen_donor')" /></label>
+          <label>Freezing Date<input type="date" formControlName="freezingDate" [readonly]="isSectionDisabled('semen_donor')" /></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="cycle-summary">
+      <div class="summary-left">
+        <div class="summary-item oocyte">
+          <span>🥚</span>
+          <div>
+            <small>Oocyte Source</small>
+            <strong>{{ oocyteSource }}</strong>
+          </div>
+        </div>
+        <div class="summary-item semen">
+          <span>🧪</span>
+          <div>
+            <small>Semen Source</small>
+            <strong>{{ semenSource }}</strong>
+          </div>
+        </div>
+      </div>
+      <div class="summary-arrow">→</div>
+      <div class="summary-right">
+        <small>Cycle Type</small>
+        <strong>{{ computedCycleType }}</strong>
+      </div>
+    </div>
+    <p class="summary-footer">This will be used for reports, billing and statutory records.</p>
+
+    @if (error$ | async; as error) {
+      <div class="alert error">{{ error }}</div>
+    }
+    @if (success$ | async; as success) {
+      <div class="alert success">{{ success }}</div>
+    }
+
+    <div class="actions">
+      <button type="button" class="btn btn-save" (click)="save(true)" [disabled]="saving$ | async">Save & Next</button>
+      <button type="button" class="btn btn-next" (click)="next()">Next</button>
+      <button type="button" class="btn btn-cancel" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

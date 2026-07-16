@@ -1,0 +1,163 @@
+.tab-form {
+  border: 2px solid #68a91b;
+  border-radius: 0 0 10px 10px;
+  padding: 16px;
+  background: #f8fdf2;
+}
+
+.tab-loading {
+  padding: 40px;
+  text-align: center;
+  color: #6b7280;
+  border: 2px solid #68a91b;
+  border-radius: 0 0 10px 10px;
+}
+
+.tab-section {
+  border: 2px solid #a66c18;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #fffbf5;
+}
+
+.tab-section h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: #92400e;
+}
+
+.field-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.field-grid.cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.field-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.field-grid label.span-2 { grid-column: span 2; }
+.field-grid label.span-full { grid-column: 1 / -1; }
+
+.field-grid input,
+.field-grid select,
+.field-grid textarea {
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 12px 0;
+  align-items: center;
+}
+
+.group-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.checkbox-group label,
+.chk-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.attempt-row,
+.remday-row {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.attempt-row {
+  grid-template-columns: 1.2fr repeat(2, 0.6fr) 1.2fr 1fr repeat(4, 0.8fr) 1.5fr;
+}
+
+.remday-header,
+.remday-row {
+  grid-template-columns: 0.5fr 1.2fr repeat(6, 0.7fr) 0.7fr 0.7fr 0.8fr 0.5fr 1.2fr;
+}
+
+.remday-header {
+  display: grid;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.remday-row input,
+.attempt-row input,
+.attempt-row select {
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.attempt-row .chk {
+  flex-direction: row;
+  align-items: center;
+}
+
+.tab-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.btn-add {
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-save { background: #2e7d32; color: #fff; }
+
+.alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.alert.error { background: #fef2f2; color: #dc2626; }
+.alert.success { background: #f0fdf4; color: #16a34a; }
+
+@media (max-width: 1100px) {
+  .field-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+  .attempt-row, .remday-row, .remday-header { grid-template-columns: repeat(4, 1fr); }
+}

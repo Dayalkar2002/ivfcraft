@@ -1,0 +1,43 @@
+<div class="master-page">
+  <div class="master-card">
+    <h1>Satellite Master</h1>
+    @if (error) { <p class="error">{{ error }}</p> }
+
+    <form [formGroup]="form" class="form-grid" (ngSubmit)="submit()">
+      <label>Name <input formControlName="name" /></label>
+      <label>Short Name <input formControlName="shortName" /></label>
+      <label>City <input formControlName="city" /></label>
+      <label>Phone <input formControlName="phone" /></label>
+      <label>Mobile <input formControlName="mobile" /></label>
+      <label>Fax <input formControlName="fax" /></label>
+      <label>Email <input formControlName="email" /></label>
+      <label class="full">Address 1 <input formControlName="address1" /></label>
+      <label>Address 2 <input formControlName="address2" /></label>
+      <label>Doctor One <input formControlName="drOne" /></label>
+      <label>Doctor One Degree <input formControlName="drOneDeg" /></label>
+      <label>Doctor Two <input formControlName="drTwo" /></label>
+      <label>Doctor Two Degree <input formControlName="drTwoDeg" /></label>
+      <div class="actions full">
+        <button type="submit" [disabled]="saving">{{ form.value.satId ? 'Update' : 'Submit' }}</button>
+        <button type="button" class="muted" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+
+    <table>
+      <thead><tr><th>Select</th><th>Name</th><th>Short Name</th><th>City</th><th>Phone</th></tr></thead>
+      <tbody>
+        @for (row of rows; track row.id) {
+          <tr>
+            <td><button type="button" class="link" (click)="selectRow(row)">Select</button></td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.shortName }}</td>
+            <td>{{ row.city }}</td>
+            <td>{{ row.phone }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="empty">No satellites found.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
