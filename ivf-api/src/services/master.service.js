@@ -217,12 +217,31 @@ async function getPatientById(patId) {
   return detail;
 }
 
+function normalizePatientPayload(payload) {
+  const maritalStatus = payload.maritalStatus || 'Married';
+  const normalized = {
+    ...payload,
+    category: '',
+    maritalStatus,
+  };
+
+  if (maritalStatus === 'Unmarried') {
+    normalized.phone = '';
+    normalized.husbandAadhar = '';
+    normalized.husbandPan = '';
+    normalized.husbandEmail = '';
+  }
+
+  return normalized;
+}
+
 async function savePatient(payload, action = 'insert') {
+  const normalized = normalizePatientPayload(payload);
   const queryIndex = action === 'update' ? 12 : 11;
-  const params = buildPatientParams(defaultPatientPayload(payload), queryIndex);
+  const params = buildPatientParams(defaultPatientPayload(normalized), queryIndex);
 
   if (action === 'insert') {
-    const dupParams = buildPatientParams(defaultPatientPayload(payload), 10);
+    const dupParams = buildPatientParams(defaultPatientPayload(normalized), 10);
     const dupCheck = await executeDRL(PATIENT_SP, dupParams);
     if ((dupCheck.recordset || []).length > 0) {
       const err = new Error('Patient Aadhar already exists.');
@@ -234,14 +253,14 @@ async function savePatient(payload, action = 'insert') {
   const result = await executeDML(PATIENT_SP, params);
   const savedPatId =
     action === 'update'
-      ? Number(payload.patId) || 0
-      : Number(result.returnValue) || Number(payload.patId) || 0;
+      ? Number(normalized.patId) || 0
+      : Number(result.returnValue) || Number(normalized.patId) || 0;
 
-  if (savedPatId > 0 && payload.maritalStatus) {
-    await savePatMaritalStatus(savedPatId, payload.maritalStatus);
+  if (savedPatId > 0 && normalized.maritalStatus) {
+    await savePatMaritalStatus(savedPatId, normalized.maritalStatus);
   }
 
-  return listPatients({ satId: payload.satId });
+  return listPatients({ satId: normalized.satId });
 }
 
 async function deletePatient(patId) {

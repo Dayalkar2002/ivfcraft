@@ -7,6 +7,7 @@ const {
 } = require('../data/store');
 const patientService = require('../services/patient.service');
 const cycleDetailService = require('../services/cycle-detail.service');
+const cycleRetrievalService = require('../services/cycle-retrieval.service');
 const { isDbConfigured } = require('../db/pool');
 
 const router = express.Router();
@@ -72,7 +73,7 @@ async function validateDonorToRecipientRetrieval({ donorPatId, cycleId, rows }) 
     return { valid: true };
   }
 
-  for (const row of activeRows) {
+    for (const row of activeRows) {
     const check = await patientService.checkOocyteDonorAadhar({
       donorPatId,
       recipientPatId: Number(row.recipientPatientId),
@@ -80,6 +81,9 @@ async function validateDonorToRecipientRetrieval({ donorPatId, cycleId, rows }) 
     });
     if (!check.isAllowed) {
       return { valid: false, message: check.message || 'Oocyte donor Aadhaar validation failed.' };
+    }
+    if (check.message && check.message.toLowerCase().includes('warning:')) {
+      // Recipient Aadhaar missing is a warning only (10-Jul-2026 legacy behavior).
     }
   }
 
@@ -227,7 +231,26 @@ router.post('/:cycleId/retrieval', async (req, res, next) => {
       }
     }
 
-    cycles[index].retrieval = sections;
+    let savedSections = sections;
+    if (isDbConfigured()) {
+      try {
+        const dbSaved = await cycleRetrievalService.saveRetrieval({
+          cycId: cycleId,
+          patId: cycle.patientId,
+          satId: cycle.satelliteId,
+          cycleDate: cycle.cycleDate,
+          sections,
+        });
+        if (dbSaved) savedSections = dbSaved;
+      } catch (dbError) {
+        return res.status(500).json({
+          success: false,
+          message: dbError.message || 'Failed to save retrieval to database.',
+        });
+      }
+    }
+
+    cycles[index].retrieval = savedSections;
     cycles[index].status = 'retrieval_saved';
     cycles[index].updatedAt = new Date().toISOString();
     cycles[index].updatedBy = req.user.userName;
@@ -445,6 +468,16 @@ router.get('/:cycleId/retrieval-config', async (req, res, next) => {
       }
     }
 
+    let existingRetrieval = cycle.retrieval;
+    if (isDbConfigured()) {
+      const dbRetrieval = await cycleRetrievalService.loadRetrieval({
+        cycId: cycle.cycleId,
+        patId: cycle.patientId,
+        satId: cycle.satelliteId,
+      });
+      if (dbRetrieval) existingRetrieval = dbRetrieval;
+    }
+
     const config = {
       cycle,
       sections: cycle.retrievalSections || getRetrievalSections(cycle.oocyteSource, cycle.semenSource),
@@ -452,7 +485,7 @@ router.get('/:cycleId/retrieval-config', async (req, res, next) => {
       availableRecipients,
       lockedRecipients,
       donorAadhar: patient?.aadhar || '',
-      existingRetrieval: cycle.retrieval,
+      existingRetrieval,
     };
 
     return res.json({ success: true, data: config });

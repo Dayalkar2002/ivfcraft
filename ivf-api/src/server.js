@@ -23,7 +23,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(helmet());
 app.use(morgan('dev'));
-app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:4200' }));
+app.use(cors({
+  origin: (process.env.CORS_ORIGIN || 'http://localhost:3001')
+    .split(',')
+    .map((origin) => origin.trim()),
+  credentials: true,
+}));
 app.use(express.json());
 
 app.get('/api/health', async (req, res) => {
