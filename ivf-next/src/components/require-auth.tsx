@@ -5,14 +5,22 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/auth-context';
 
 export function RequireAuth({ children }: { children: ReactNode }) {
-  const { token } = useAuth();
+  const { token, hydrated } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!token) {
+    if (hydrated && !token) {
       router.replace('/login');
     }
-  }, [token, router]);
+  }, [token, hydrated, router]);
+
+  if (!hydrated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-500">
+        Loading session…
+      </div>
+    );
+  }
 
   if (!token) {
     return (

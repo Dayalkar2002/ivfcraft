@@ -3,11 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --brand-green: #388e3c;
-  --brand-primary: #689f38;
-  --brand-dark: #558b2f;
-  --text-dark: #1e293b;
-  --text-muted: #94a3b8;
+  --brand-green: #0d9488;
+  --brand-primary: #14b8a6;
+  --brand-dark: #0f766e;
+  --brand-ink: #0b1f1c;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --surface: #f8fafc;
 }
 
 html,
@@ -17,9 +19,9 @@ body {
 
 body {
   margin: 0;
-  font-family: Inter, 'Segoe UI', sans-serif;
+  font-family: var(--font-inter), Inter, 'Segoe UI', sans-serif;
   color: var(--text-dark);
-  background: #fff;
+  background: var(--surface);
 }
 
 .material-symbols-rounded {
@@ -52,4 +54,33 @@ body {
   padding: 24px;
   font-size: 14px;
   color: #64748b;
+}
+
+/* Login panel orbs */
+.login-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(40px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+.kpi-ring {
+  background: conic-gradient(from 180deg, #14b8a6, #99f6e4, #fb7185, #14b8a6);
 }

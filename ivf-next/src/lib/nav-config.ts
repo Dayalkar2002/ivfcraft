@@ -79,10 +79,10 @@ const RAW_REGISTRY: Omit<MasterMenuItem, 'route'>[] = [
   { label: 'Indication Master', type: 'common', catId: 23, column: 1 },
   { label: 'Media Brand', type: 'common', catId: 28, column: 1 },
   { label: 'Out Come Drug Master', type: 'outcome-drug', column: 1 },
-  { label: 'RefBy Master', type: 'common', catId: 21, column: 1 },
+  { label: 'Referring Doctor', type: 'common', catId: 21, column: 1 },
   { label: 'Termination Master', type: 'common', catId: 11, column: 1 },
   { label: 'Antagonist Master', type: 'common', catId: 18, column: 2 },
-  { label: 'Clomiphena Master', type: 'common', catId: 17, column: 2 },
+  { label: 'Clomiphene Citrate', type: 'common', catId: 17, column: 2 },
   { label: 'Diagnosis Master', type: 'common', catId: 20, column: 2 },
   { label: 'Findings', type: 'common', catId: 26, column: 2 },
   { label: 'Gas', type: 'common', catId: 31, column: 2 },
@@ -92,24 +92,24 @@ const RAW_REGISTRY: Omit<MasterMenuItem, 'route'>[] = [
   { label: 'Satellite Master', type: 'satellite', column: 2 },
   { label: 'User Master', type: 'user', column: 2 },
   { label: 'Appearance Master', type: 'common', catId: 4, column: 3 },
-  { label: 'Coll Problem Master', type: 'common', catId: 24, column: 3 },
+  { label: 'Collection Problem', type: 'common', catId: 24, column: 3 },
   { label: 'Doctor Master', type: 'doctor', column: 3 },
-  { label: 'Form Master', type: 'common', catId: 1, column: 3 },
+  { label: 'Personnel Master', type: 'common', catId: 16, column: 3 },
   { label: 'HMG Drug Master', type: 'common', catId: 15, column: 3 },
   { label: 'Linearity', type: 'common', catId: 25, column: 3 },
   { label: 'Method Master', type: 'common', catId: 3, column: 3 },
   { label: 'Patient Selection', type: 'patient-selection', column: 3 },
   { label: 'Sperm Id Master', type: 'common', catId: 22, column: 3 },
   { label: 'Viscosity Master', type: 'common', catId: 6, column: 3 },
-  { label: 'AppointMents', type: 'appointments', column: 4 },
+  { label: 'Appointment Scheduler', type: 'appointments', column: 4 },
   { label: 'Colour Master', type: 'common', catId: 5, column: 4 },
   { label: 'Done By Master', type: 'common', catId: 10, column: 4 },
   { label: 'Fructose Master', type: 'common', catId: 8, column: 4 },
   { label: 'Incubator Used', type: 'common', catId: 30, column: 4 },
   { label: 'Liquefaction Master', type: 'common', catId: 7, column: 4 },
-  { label: 'Other Master', type: 'common', catId: 19, column: 4 },
-  { label: 'Personnel Master', type: 'common', catId: 16, column: 4 },
-  { label: 'StimulProtocol Master', type: 'common', catId: 13, column: 4 },
+  { label: 'Other Drug Master', type: 'common', catId: 19, column: 4 },
+  { label: 'Other Drug Master 2', type: 'common', catId: 32, column: 4 },
+  { label: 'Ovulation Induction', type: 'common', catId: 13, column: 4 },
 ];
 
 export const MASTER_REGISTRY: MasterMenuItem[] = RAW_REGISTRY.map((item) => ({
@@ -166,10 +166,33 @@ export const REPORT_MENU_GROUPS: NavMenuGroup[] = [
   },
 ];
 
+/** Top menu mirrors legacy PatMngtSys.master clinical strip + Master / Report megas. */
 export const TOP_NAV_MENUS: TopNavMenu[] = [
   { label: 'Dashboard', route: '/dashboard', icon: 'dashboard' },
   { label: 'Master', icon: 'masters', columns: getMasterColumns() },
-  { label: 'Cycle', route: '/cycle/entry', icon: 'cycle' },
+  {
+    label: 'Clinical',
+    icon: 'cycle',
+    items: [
+      { label: 'IUI', route: '/iui', icon: 'iui' },
+      { label: 'Cycle', route: '/cycle/entry', icon: 'cycle' },
+      { label: 'ET', route: '/et', icon: 'et' },
+      { label: 'BT', route: '/bt', icon: 'bt' },
+      { label: 'IVF', route: '/ivf', icon: 'ivf' },
+      { label: 'ICSI', route: '/icsi', icon: 'icsi' },
+      { label: 'Consent Form', route: '/consent', icon: 'consent' },
+    ],
+  },
+  {
+    label: 'Cryo',
+    icon: 'cryo',
+    items: [
+      { label: 'Semen – Self', route: '/cryo/semen-self' },
+      { label: 'Semen – Donor', route: '/cryo/semen-donor' },
+      { label: 'Oocytes', route: '/cryo/oocytes' },
+      { label: 'Embryos', route: '/cryo/embryos' },
+    ],
+  },
   { label: 'Report', icon: 'reports', groups: REPORT_MENU_GROUPS },
 ];
 
@@ -185,6 +208,7 @@ export const SIDE_NAV_SECTIONS: SideNavSection[] = [
     items: [
       { label: 'Patient Master', route: '/masters/patient', icon: 'patient' },
       { label: 'Select Patient', route: '/dashboard?selectPatient=1', icon: 'patient' },
+      { label: 'Consent Form', route: '/consent', icon: 'consent' },
     ],
   },
   {
@@ -218,6 +242,7 @@ export const SIDE_NAV_SECTIONS: SideNavSection[] = [
       { label: 'SMS', route: '/sms', icon: 'sms' },
       { label: 'Report Email', route: '/report-email', icon: 'billing' },
       { label: 'Role Master', route: '/role-master', icon: 'users' },
+      { label: 'QR Code List', route: '/reports/qrcode-list', icon: 'reports' },
     ],
   },
   {
@@ -226,6 +251,7 @@ export const SIDE_NAV_SECTIONS: SideNavSection[] = [
     items: [
       { label: 'Users', route: '/masters/user', icon: 'users' },
       { label: 'Masters Hub', route: '/masters', icon: 'settings' },
+      { label: 'Reports Hub', route: '/reports', icon: 'reports' },
     ],
   },
 ];

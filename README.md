@@ -1,73 +1,74 @@
-# smART IVF - Next.js + Node.js
+# smART IVF — Next.js + Node.js Revamp
 
-Modern rewrite of the smART IVF & Fertility Management System.
+Modern rewrite of the legacy ASP.NET `smart` IVF clinic system (`Desktop/ivf/smart`).
 
-## Project Structure
+## Structure
 
 ```
 ivf_ng/
-├── ivf-next/    → Next.js 15 + React frontend
-└── ivf-api/     → Node.js/Express REST API (SQL Server stored procedures)
+├── ivf-next/   → Next.js 15 + React 19 + Tailwind (trending UI)
+└── ivf-api/    → Express API calling SQL Server stored procedures
 ```
 
-## Prerequisites
+## Features
 
-- **Node.js v20.19+** (or v22.12+)
-- npm
+- **Trending login** — split hero + glass sign-in card
+- **Trending dashboard** — KPI bento, quick actions, patient snapshot (SP-backed)
+- **Left sidebar + top menu** — mirrors legacy Master / Clinical / Cryo / Report structure
+- **Clinical modules** — IUI, Cycle, IVF, ICSI, ET, BT
+- **Masters** — common masters by CatID, patient/doctor/satellite/user
+- **Consent Form Book** — case-category presets + form checklist
+- **Reports / Cryo / SMS / Role** — SP-driven shells via module registry
+- **Auth** — `spUserLogin` when DB is configured; demo fallback `admin / admin123`
 
 ## Quick Start
 
-### 1. Start the API (Terminal 1)
+### 1. API
 
 ```bash
 cd ivf-api
+cp .env.example .env
+# Edit DB_* from Web.config connectionStrings name="ConsmArt"
 npm install
 npm run dev
 ```
 
-API runs at **http://localhost:3000**
+API: **http://localhost:3000**
 
-### 2. Start the Next.js App (Terminal 2)
+### 2. Frontend
 
 ```bash
 cd ivf-next
-npm install
 cp .env.example .env.local
+npm install
 npm run dev
 ```
 
-App runs at **http://localhost:3001**
+App: **http://localhost:3001**
 
-See `ivf-next/README.md` for module coverage and remaining legacy parity work.
+## Demo Login
 
-## Demo Login Credentials
+| Username | Password  |
+|----------|-----------|
+| admin    | admin123  |
+| doctor   | doctor123 |
 
-| Username | Password   |
-|----------|------------|
-| admin    | admin123   |
-| doctor   | doctor123  |
+When `DB_*` is set, production users authenticate via **`spUserLogin`**.
 
-## Stack Overview
+## Key APIs
+
+| Route | Purpose |
+|-------|---------|
+| `POST /api/auth/login` | `spUserLogin` |
+| `GET /api/dashboard/summary` | Clinic KPIs + `spCycOutComeExtDRL` / `spIUIOutComeExtDRL` |
+| `GET /api/consent/*` | Presets, forms, patient context |
+| `POST /api/sp/drl` | Generic SP executor (legacy DAL pattern) |
+| `/api/patients`, `/api/cycles`, `/api/iui`, `/api/ivf`, `/api/icsi`, `/api/et`, `/api/bt`, `/api/masters` | Module APIs |
+
+## Stack
 
 | Layer | Tech |
 |-------|------|
-| Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS |
-| API | Express 5, JWT auth, SQL Server via stored procedures |
-| Auth | JWT from `/api/auth/login`, in-memory session |
-
-## Legacy smART parity (_updatesdb.txt)
-
-Compared with `Desktop/ivf/smart` (ASP.NET):
-
-| Change | Status in ivf_ng |
-|--------|------------------|
-| BT/ET: remove **Donated**, keep **DonatedForResearch** | Done |
-| IVF blocked when age > 50 | Done (UI + API) |
-| Cycle retrieval: **Self→Self** + **Donor→Recipient** only (Version B) | Done |
-| D2R Aadhaar validation + one donor → one recipient | Done (UI + API + `spCheckOocyteDonorAadhar`) |
-| Patient **PatMaritalStatus** + category sync on donation | Done |
-| Retrieval persisted via **`spCycRetrieval`** when SQL is configured | Done |
-| Cycle thaw grids / full Cycle.aspx thaw UI | Not ported yet |
-| Cryo entry forms, formatted report PDFs, SMS compose, report email | Partial (SP shells in ivf-next) |
-
-Run DB scripts in `ivf/smart/_updatesdb.txt` on the client database before using Aadhaar check and marital status columns.
+| Frontend | Next.js 15, React 19, TypeScript, Tailwind |
+| API | Express 5, JWT, `mssql` stored procedures |
+| Legacy source | ASP.NET WebForms `ivf/smart` |
