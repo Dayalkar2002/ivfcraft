@@ -14,22 +14,25 @@ interface PatientContextBarProps {
 export function PatientContextBar({ patient, onSelectPatient }: PatientContextBarProps) {
   if (patient) {
     return (
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brand-primary/20 bg-brand-light/60 px-4 py-3">
-        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand-primary/20 bg-gradient-to-r from-brand-mist to-white px-4 py-3 shadow-sm">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-dark text-xs font-bold text-white">
+            {patient.name.slice(0, 1).toUpperCase()}
+          </div>
           <div>
-            <span className="text-slate-500">Patient:</span>{' '}
+            <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Patient</div>
             <strong className="text-slate-800">{patient.name}</strong>
           </div>
           <div>
-            <span className="text-slate-500">UHID:</span>{' '}
+            <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">UHID</div>
             <strong className="text-slate-800">{patient.uhid || '—'}</strong>
           </div>
           <div>
-            <span className="text-slate-500">Partner:</span>{' '}
+            <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Partner</div>
             <strong className="text-slate-800">{patient.partner || '—'}</strong>
           </div>
           <div>
-            <span className="text-slate-500">Age / Gender:</span>{' '}
+            <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Age / Gender</div>
             <strong className="text-slate-800">
               {patient.age ?? '—'} Y / {patient.gender || '—'}
             </strong>
@@ -38,9 +41,8 @@ export function PatientContextBar({ patient, onSelectPatient }: PatientContextBa
         <button
           type="button"
           onClick={onSelectPatient}
-          className="inline-flex items-center gap-2 rounded-lg border border-brand-primary/30 bg-white px-3 py-1.5 text-sm font-semibold text-brand-green hover:bg-brand-light"
+          className="inline-flex items-center gap-2 rounded-xl border border-brand-primary/30 bg-white px-3 py-2 text-sm font-semibold text-brand-dark hover:bg-brand-light"
         >
-          <UserPlusIcon />
           Change Patient
         </button>
       </div>
@@ -48,36 +50,18 @@ export function PatientContextBar({ patient, onSelectPatient }: PatientContextBa
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-      <span>No patient selected. Please select a patient to continue.</span>
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+      <div>
+        <div className="font-semibold">No patient selected</div>
+        <div className="text-amber-800/80">Select a satellite clinic and patient to open clinical modules.</div>
+      </div>
       <button
         type="button"
         onClick={onSelectPatient}
-        className="inline-flex items-center gap-2 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-sm font-semibold text-amber-800 hover:bg-amber-100"
+        className="inline-flex items-center gap-2 rounded-xl border border-amber-300 bg-white px-3 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
       >
-        <UserPlusIcon />
         Select Patient
       </button>
     </div>
-  );
-}
-
-function UserPlusIcon() {
-  return (
-    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M3 20c0-3 2.7-5.5 6-5.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M16 11v6M13 14h6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
   );
 }

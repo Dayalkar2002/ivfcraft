@@ -16,27 +16,62 @@ const ivfRoutes = require('./routes/ivf.routes');
 const icsiRoutes = require('./routes/icsi.routes');
 const etRoutes = require('./routes/et.routes');
 const btRoutes = require('./routes/bt.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
+const consentRoutes = require('./routes/consent.routes');
 const { isDbConfigured, getPool } = require('./db/pool');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
-app.use(morgan('dev'));
-app.use(cors({
-  origin: (process.env.CORS_ORIGIN || 'http://localhost:3001')
+const defaultOrigins = [
+  'http://localhost:3001',
+  'http://127.0.0.1:3001',
+  'https://ivfcraft.vercel.app',
+];
+
+const allowedOrigins = new Set(
+  (process.env.CORS_ORIGIN || defaultOrigins.join(','))
     .split(',')
-    .map((origin) => origin.trim()),
-  credentials: true,
-}));
-app.use(express.json());
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+);
+
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+app.use(morgan('dev'));
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow non-browser / same-origin tools (no Origin header)
+      if (!origin || allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+      console.warn(`[cors] blocked origin: ${origin}`);
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+  })
+);
+app.use(express.json({ limit: '2mb' }));
 
 app.get('/api/health', async (req, res) => {
   const health = {
     success: true,
     message: 'smART IVF API is running.',
     database: 'not_configured',
-    routes: ['auth', 'patients', 'cycles', 'sp', 'masters', 'iui', 'ivf', 'icsi', 'et', 'bt'],
+    routes: [
+      'auth',
+      'patients',
+      'cycles',
+      'sp',
+      'masters',
+      'iui',
+      'ivf',
+      'icsi',
+      'et',
+      'bt',
+      'dashboard',
+      'consent',
+    ],
   };
 
   if (isDbConfigured()) {
@@ -62,6 +97,8 @@ app.use('/api/ivf', authMiddleware, ivfRoutes);
 app.use('/api/icsi', authMiddleware, icsiRoutes);
 app.use('/api/et', authMiddleware, etRoutes);
 app.use('/api/bt', authMiddleware, btRoutes);
+app.use('/api/dashboard', authMiddleware, dashboardRoutes);
+app.use('/api/consent', authMiddleware, consentRoutes);
 
 app.use(errorHandler);
 

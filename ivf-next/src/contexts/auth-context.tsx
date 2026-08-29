@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -12,10 +13,14 @@ import { useRouter } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import type { AuthUser, LoginResponse } from '@/lib/types/auth';
 
+const TOKEN_KEY = 'smart_ivf_token';
+const USER_KEY = 'smart_ivf_user';
+
 interface AuthContextValue {
   user: AuthUser | null;
   token: string | null;
   loading: boolean;
+  hydrated: boolean;
   error: string | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
@@ -24,12 +29,32 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function readStoredAuth(): { token: string | null; user: AuthUser | null } {
+  if (typeof window === 'undefined') return { token: null, user: null };
+  try {
+    const token = localStorage.getItem(TOKEN_KEY);
+    const raw = localStorage.getItem(USER_KEY);
+    const user = raw ? (JSON.parse(raw) as AuthUser) : null;
+    return { token, user };
+  } catch {
+    return { token: null, user: null };
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const stored = readStoredAuth();
+    setToken(stored.token);
+    setUser(stored.user);
+    setHydrated(true);
+  }, []);
 
   const login = useCallback(
     async (username: string, password: string) => {
@@ -45,6 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           throw new Error('Login response was incomplete.');
         }
 
+        localStorage.setItem(TOKEN_KEY, res.token);
+        localStorage.setItem(USER_KEY, JSON.stringify(res.user));
         setToken(res.token);
         setUser(res.user);
         router.push('/dashboard');
@@ -60,6 +87,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const logout = useCallback(() => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     setUser(null);
     setToken(null);
     setError(null);
@@ -69,8 +98,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const clearError = useCallback(() => setError(null), []);
 
   const value = useMemo(
-    () => ({ user, token, loading, error, login, logout, clearError }),
-    [user, token, loading, error, login, logout, clearError]
+    () => ({ user, token, loading, hydrated, error, login, logout, clearError }),
+    [user, token, loading, hydrated, error, login, logout, clearError]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -85,6 +114,5 @@ export function useAuth() {
 }
 
 export function useRequireAuth() {
-  const auth = useAuth();
-  return auth;
+  return useAuth();
 }

@@ -23,6 +23,9 @@ export function TopNav() {
 
   function isActive(menu: TopNavMenu): boolean {
     if (menu.route) return pathname === menu.route || pathname.startsWith(`${menu.route}/`);
+    if (menu.items?.some((i) => pathname === i.route || pathname.startsWith(`${i.route}/`))) return true;
+    if (menu.groups?.some((g) => g.items.some((i) => pathname.startsWith(i.route)))) return true;
+    if (menu.label === 'Master' && pathname.startsWith('/masters')) return true;
     return false;
   }
 
@@ -31,14 +34,16 @@ export function TopNav() {
   }
 
   return (
-    <nav ref={navRef} className="hidden flex-1 items-center justify-center gap-1 lg:flex">
+    <nav ref={navRef} className="hidden flex-1 items-center gap-1 xl:flex">
       {TOP_NAV_MENUS.map((menu) => (
         <div key={menu.label} className="relative">
           {menu.route && !hasDropdown(menu) ? (
             <Link
               href={menu.route}
-              className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                isActive(menu) ? 'bg-brand-light text-brand-green' : 'text-slate-600 hover:bg-slate-100'
+              className={`rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                isActive(menu)
+                  ? 'bg-brand-mist text-brand-dark'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               {menu.label}
@@ -48,28 +53,35 @@ export function TopNav() {
               <button
                 type="button"
                 onClick={() => setOpenMenu(openMenu === menu.label ? null : menu.label)}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                  openMenu === menu.label ? 'bg-brand-light text-brand-green' : 'text-slate-600 hover:bg-slate-100'
+                className={`rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                  openMenu === menu.label || isActive(menu)
+                    ? 'bg-brand-mist text-brand-dark'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
-                {menu.label} ▾
+                {menu.label}
+                <span className="ml-1 text-[10px] opacity-60">▾</span>
               </button>
               {openMenu === menu.label && (
                 <div
-                  className={`absolute left-0 top-full z-50 mt-1 rounded-xl border border-slate-200 bg-white shadow-xl ${
-                    menu.columns ? 'w-[720px] max-w-[90vw] p-4' : menu.groups ? 'w-[520px] max-w-[90vw] p-4' : 'min-w-[200px] py-2'
+                  className={`absolute left-0 top-full z-50 mt-2 rounded-2xl border border-slate-200 bg-white shadow-xl ${
+                    menu.columns
+                      ? 'w-[760px] max-w-[92vw] p-5'
+                      : menu.groups
+                        ? 'w-[560px] max-w-[92vw] p-5'
+                        : 'min-w-[220px] py-2'
                   }`}
                 >
                   {menu.columns && (
                     <div className="grid grid-cols-4 gap-4">
                       {menu.columns.map((column, ci) => (
-                        <div key={ci} className="space-y-1">
+                        <div key={ci} className="space-y-0.5">
                           {column.map((item) => (
                             <Link
-                              key={item.route}
+                              key={item.route + item.label}
                               href={item.route}
                               onClick={() => setOpenMenu(null)}
-                              className="block rounded px-2 py-1.5 text-xs text-slate-700 hover:bg-brand-light hover:text-brand-green"
+                              className="block rounded-lg px-2 py-1.5 text-xs font-medium text-slate-700 hover:bg-brand-mist hover:text-brand-dark"
                             >
                               {item.label}
                             </Link>
@@ -82,7 +94,7 @@ export function TopNav() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       {menu.groups.map((group) => (
                         <div key={group.label}>
-                          <div className="mb-2 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                          <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
                             {group.label}
                           </div>
                           {group.items.map((item) => (
@@ -90,7 +102,7 @@ export function TopNav() {
                               key={item.route}
                               href={item.route}
                               onClick={() => setOpenMenu(null)}
-                              className="block rounded px-2 py-1.5 text-xs text-slate-700 hover:bg-brand-light hover:text-brand-green"
+                              className="block rounded-lg px-2 py-1.5 text-xs font-medium text-slate-700 hover:bg-brand-mist hover:text-brand-dark"
                             >
                               {item.label}
                             </Link>
@@ -104,7 +116,7 @@ export function TopNav() {
                       key={item.route}
                       href={item.route}
                       onClick={() => setOpenMenu(null)}
-                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-brand-mist hover:text-brand-dark"
                     >
                       {item.label}
                     </Link>
