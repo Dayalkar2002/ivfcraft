@@ -12,6 +12,8 @@ export function LoginForm() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (loading) return;
+
     const nextErrors: { username?: string; password?: string } = {};
     if (!username.trim()) nextErrors.username = 'Username or email is required.';
     if (!password) nextErrors.password = 'Password is required.';
@@ -26,16 +28,30 @@ export function LoginForm() {
   }
 
   return (
-    <div className="w-full">
+    <div className="relative w-full overflow-hidden">
+      {/* Top Animated Progress Bar while Loading */}
+      {loading && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-purple-100 overflow-hidden rounded-t-xl">
+          <div className="h-full bg-gradient-to-r from-[#6b46c1] to-[#7c3aed] animate-pulse w-full" />
+        </div>
+      )}
+
       {/* Top Purple Shield Icon Badge Header */}
-      <div className="mb-6 text-center">
+      <div className="mb-6 text-center pt-2">
         <div className="relative mx-auto mb-4 flex h-14 w-14 items-center justify-center">
           <div className="absolute inset-0 rounded-2xl bg-[#6b46c1]/20 blur-md" />
           <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#5b3da0] to-[#7c3aed] text-white shadow-md">
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              <rect x="9" y="11" width="6" height="5" rx="1" fill="currentColor" />
-            </svg>
+            {loading ? (
+              <svg className="h-6 w-6 animate-spin text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+            ) : (
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <rect x="9" y="11" width="6" height="5" rx="1" fill="currentColor" />
+              </svg>
+            )}
           </div>
         </div>
         <h2 className="text-2xl font-bold tracking-tight text-slate-800">
@@ -70,11 +86,12 @@ export function LoginForm() {
               type="text"
               placeholder="Username / Email"
               value={username}
+              disabled={loading}
               onChange={(e) => setUsername(e.target.value)}
               onFocus={clearError}
               autoComplete="username"
               aria-required
-              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 ${
+              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 ${
                 fieldErrors.username ? 'border-red-400' : 'border-slate-200'
               }`}
             />
@@ -100,17 +117,19 @@ export function LoginForm() {
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               value={password}
+              disabled={loading}
               onChange={(e) => setPassword(e.target.value)}
               onFocus={clearError}
               autoComplete="current-password"
               aria-required
-              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-10 text-sm text-slate-800 placeholder-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 ${
+              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-10 text-sm text-slate-800 placeholder-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 ${
                 fieldErrors.password ? 'border-red-400' : 'border-slate-200'
               }`}
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              disabled={loading}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 disabled:opacity-50"
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
@@ -132,6 +151,7 @@ export function LoginForm() {
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
+              disabled={loading}
               className="h-4 w-4 rounded border-slate-300 text-[#6b46c1] focus:ring-[#6b46c1]"
             />
             <span className="text-xs text-slate-600 font-medium">Remember Me</span>
@@ -145,14 +165,20 @@ export function LoginForm() {
           </a>
         </div>
 
-        {/* Solid Purple Login Button */}
+        {/* Solid Purple Login Button with Spinner */}
         <button
           type="submit"
           disabled={loading}
-          className="mt-3 flex h-11 w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#6b46c1] to-[#7c3aed] text-sm font-semibold text-white shadow-md transition hover:opacity-95 disabled:opacity-70"
+          className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6b46c1] to-[#7c3aed] text-sm font-semibold text-white shadow-md transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-80"
         >
           {loading ? (
-            <span className="spinner" />
+            <>
+              <svg className="h-4 w-4 animate-spin text-white" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              <span>Signing in...</span>
+            </>
           ) : (
             <span>Login</span>
           )}
@@ -169,11 +195,12 @@ export function LoginForm() {
         {/* Login with Smart Card Button */}
         <button
           type="button"
+          disabled={loading}
           onClick={() => {
             setUsername('admin');
             setPassword('admin123');
           }}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-[#6b46c1] hover:bg-slate-50 transition"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-[#6b46c1] hover:bg-slate-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="h-4 w-4 text-[#6b46c1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <rect x="2" y="5" width="20" height="14" rx="2" />
