@@ -5,9 +5,9 @@ export function SmartLogo({ className = 'h-14 w-14' }: { className?: string }) {
         <defs>
           <linearGradient id="fertiRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#1e3a8a" />
-            <stop offset="40%" stopColor="#2563eb" />
-            <stop offset="80%" stopColor="#7c3aed" />
-            <stop offset="100%" stopColor="#6b46c1" />
+            <stop offset="45%" stopColor="#2563eb" />
+            <stop offset="80%" stopColor="#6345A6" />
+            <stop offset="100%" stopColor="#7A3DB8" />
           </linearGradient>
 
           <linearGradient id="leafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -16,12 +16,12 @@ export function SmartLogo({ className = 'h-14 w-14' }: { className?: string }) {
           </linearGradient>
 
           <linearGradient id="dnaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#7c3aed" />
-            <stop offset="100%" stopColor="#9333ea" />
+            <stop offset="0%" stopColor="#6345A6" />
+            <stop offset="100%" stopColor="#8b5cf6" />
           </linearGradient>
         </defs>
 
-        {/* Outer Circular Ring */}
+        {/* Outer Circular Ring with Teal-to-Purple Gradient */}
         <circle cx="50" cy="50" r="44" stroke="url(#fertiRingGrad)" strokeWidth="6" />
 
         {/* Plant Sprout Leaf 1 */}
@@ -45,8 +45,8 @@ export function SmartLogo({ className = 'h-14 w-14' }: { className?: string }) {
         />
 
         {/* Cell Node Circle */}
-        <circle cx="50" cy="46" r="6" fill="#7c3aed" />
-        <circle cx="50" cy="46" r="2.5" fill="#ffffff" opacity="0.8" />
+        <circle cx="50" cy="46" r="6" fill="#6345A6" />
+        <circle cx="50" cy="46" r="2.5" fill="#ffffff" opacity="0.85" />
 
         {/* DNA Strand 1 (Upper Curve) */}
         <path
@@ -65,11 +65,11 @@ export function SmartLogo({ className = 'h-14 w-14' }: { className?: string }) {
         />
 
         {/* DNA Rung Connectors */}
-        <line x1="28" y1="58" x2="28" y2="76" stroke="#a855f7" strokeWidth="2.5" />
-        <line x1="38" y1="54" x2="38" y2="80" stroke="#7c3aed" strokeWidth="2.5" />
+        <line x1="28" y1="58" x2="28" y2="76" stroke="#8b5cf6" strokeWidth="2.5" />
+        <line x1="38" y1="54" x2="38" y2="80" stroke="#6345A6" strokeWidth="2.5" />
         <line x1="50" y1="62" x2="50" y2="72" stroke="#2563eb" strokeWidth="2.5" />
-        <line x1="62" y1="54" x2="62" y2="80" stroke="#7c3aed" strokeWidth="2.5" />
-        <line x1="72" y1="58" x2="72" y2="76" stroke="#a855f7" strokeWidth="2.5" />
+        <line x1="62" y1="54" x2="62" y2="80" stroke="#6345A6" strokeWidth="2.5" />
+        <line x1="72" y1="58" x2="72" y2="76" stroke="#8b5cf6" strokeWidth="2.5" />
       </svg>
     </div>
   );
