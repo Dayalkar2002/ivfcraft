@@ -38,9 +38,9 @@ export function LoginForm() {
 
       {/* Shield Icon Badge Header */}
       <div className="mb-6 text-center">
-        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6b46c1] text-white shadow-md shadow-purple-600/20">
+        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#5b3da0] to-[#7c3aed] text-white shadow-md shadow-purple-600/20">
           <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fillOpacity="0.15" />
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fillOpacity="0.2" />
             <rect x="9" y="11" width="6" height="5" rx="1" fill="currentColor" />
             <path d="M10 11V9a2 2 0 1 1 4 0v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
@@ -82,7 +82,7 @@ export function LoginForm() {
               onFocus={clearError}
               autoComplete="username"
               aria-required
-              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 ${
+              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:#1e293b] ${
                 fieldErrors.username ? 'border-red-400' : 'border-slate-200'
               }`}
             />
@@ -113,7 +113,7 @@ export function LoginForm() {
               onFocus={clearError}
               autoComplete="current-password"
               aria-required
-              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-10 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 ${
+              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-10 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:#1e293b] ${
                 fieldErrors.password ? 'border-red-400' : 'border-slate-200'
               }`}
             />
@@ -160,7 +160,7 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#6b46c1] hover:bg-[#5b3da0] text-sm font-semibold text-white shadow-sm transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-80"
+          className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6b46c1] to-[#7c3aed] hover:from-[#5b3da0] hover:to-[#6d28d9] text-sm font-semibold text-white shadow-md shadow-purple-600/20 transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-80"
         >
           {loading ? (
             <>
@@ -191,7 +191,7 @@ export function LoginForm() {
             setUsername('admin');
             setPassword('admin123');
           }}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-[#6b46c1] hover:bg-purple-50/50 hover:border-[#6b46c1]/50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-[#6b46c1] hover:bg-purple-50/50 hover:border-[#6b46c1]/40 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="h-4 w-4 text-[#6b46c1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <rect x="2" y="5" width="20" height="14" rx="2" />

@@ -5,20 +5,20 @@ import { SmartLogo } from '@/components/smart-logo';
 export default function LoginPage() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-[#dce5f0] font-sans text-slate-800 selection:bg-purple-500 selection:text-white">
-      {/* Background Medical ICSI Artwork */}
-      <div className="absolute inset-0 z-0 opacity-90">
+      {/* Background Clean Medical ICSI Artwork */}
+      <div className="absolute inset-0 z-0 opacity-80">
         <Image
-          src="/images/login-bg-exact.jpg"
+          src="/images/icsi-clean.jpg"
           alt="IVF ICSI Micromanipulation"
           fill
           priority
-          className="object-cover object-left-bottom"
+          className="object-cover object-center"
           sizes="100vw"
         />
       </div>
 
       {/* Ambient Gradient Soft Layer for Contrast */}
-      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-r from-[#eef4fb]/90 via-[#e2ebf6]/60 to-[#d8e3f2]/80" />
+      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-r from-[#eef4fb]/95 via-[#e2ebf6]/75 to-[#d8e3f2]/85" />
 
       {/* Main Container */}
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1360px] flex-col justify-between p-6 lg:p-12">
@@ -29,7 +29,7 @@ export default function LoginPage() {
             
             {/* Top Logo & System Subtitle */}
             <div className="mb-10">
-              <div className="inline-flex items-center gap-4">
+              <div className="inline-flex items-center gap-3.5">
                 <SmartLogo className="h-16 w-16 drop-shadow-md" />
                 <div>
                   <div className="flex items-baseline gap-1">
@@ -41,7 +41,7 @@ export default function LoginPage() {
                     </span>
                     <span className="text-xs font-bold text-[#6b46c1]">TM</span>
                   </div>
-                  <div className="text-xs font-semibold text-slate-600 tracking-wide mt-0.5">
+                  <div className="text-xs font-semibold text-slate-500 tracking-wide mt-0.5">
                     IVF & Fertility Management System
                   </div>
                 </div>
@@ -58,11 +58,11 @@ export default function LoginPage() {
               </h1>
               
               {/* Accent Purple Underline */}
-              <div className="mt-3 h-1 w-24 rounded-full bg-[#6b46c1]" />
+              <div className="mt-3.5 h-1 w-24 rounded-full bg-[#6b46c1]" />
 
               {/* Sub-badge Card */}
-              <div className="mt-8 inline-flex items-center gap-3.5 rounded-2xl bg-white/40 p-2.5 pr-5 backdrop-blur-xs border border-white/60">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-[#6b46c1]">
+              <div className="mt-8 inline-flex items-center gap-3.5 rounded-2xl bg-white/70 p-3 pr-6 backdrop-blur-md border border-white/80 shadow-sm">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-100/90 text-[#6b46c1]">
                   <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                     <circle cx="12" cy="11" r="2.5" stroke="currentColor" strokeWidth="1.5" />
@@ -124,7 +124,7 @@ export default function LoginPage() {
                 <div key={pillar.title} className="flex items-center gap-6">
                   {idx > 0 && <div className="h-5 w-[1px] bg-slate-300" />}
                   <div className="flex flex-col items-center text-center">
-                    <div className="mb-1 flex h-7 w-7 items-center justify-center rounded-lg bg-white/80 shadow-2xs">
+                    <div className="mb-1 flex h-8 w-8 items-center justify-center rounded-lg bg-white/90 shadow-2xs">
                       {pillar.icon}
                     </div>
                     <span className="text-[11px] font-semibold text-slate-700">{pillar.title}</span>
@@ -137,7 +137,7 @@ export default function LoginPage() {
 
           {/* Right Floating White Login Card */}
           <div className="flex justify-center lg:col-span-5 lg:justify-end">
-            <div className="w-full max-w-[430px] rounded-[32px] bg-white p-8 sm:p-9 shadow-[0_20px_50px_rgba(0,0,0,0.09)] ring-1 ring-slate-900/5">
+            <div className="w-full max-w-[420px] rounded-[32px] bg-white p-8 sm:p-9 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] ring-1 ring-slate-900/5">
               <LoginForm />
             </div>
           </div>
