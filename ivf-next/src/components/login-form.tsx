@@ -28,36 +28,27 @@ export function LoginForm() {
   }
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full">
       {/* Top Animated Progress Bar while Loading */}
       {loading && (
-        <div className="absolute top-0 left-0 right-0 h-1 bg-purple-100 overflow-hidden rounded-t-xl">
-          <div className="h-full bg-gradient-to-r from-[#6b46c1] to-[#7c3aed] animate-pulse w-full" />
+        <div className="absolute -top-9 -left-9 -right-9 h-1 bg-purple-100 overflow-hidden rounded-t-[32px]">
+          <div className="h-full bg-[#6b46c1] animate-pulse w-full" />
         </div>
       )}
 
-      {/* Top Purple Shield Icon Badge Header */}
-      <div className="mb-6 text-center pt-2">
-        <div className="relative mx-auto mb-4 flex h-14 w-14 items-center justify-center">
-          <div className="absolute inset-0 rounded-2xl bg-[#6b46c1]/20 blur-md" />
-          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#5b3da0] to-[#7c3aed] text-white shadow-md">
-            {loading ? (
-              <svg className="h-6 w-6 animate-spin text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-            ) : (
-              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                <rect x="9" y="11" width="6" height="5" rx="1" fill="currentColor" />
-              </svg>
-            )}
-          </div>
+      {/* Shield Icon Badge Header */}
+      <div className="mb-6 text-center">
+        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6b46c1] text-white shadow-md shadow-purple-600/20">
+          <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fillOpacity="0.15" />
+            <rect x="9" y="11" width="6" height="5" rx="1" fill="currentColor" />
+            <path d="M10 11V9a2 2 0 1 1 4 0v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
         </div>
         <h2 className="text-2xl font-bold tracking-tight text-slate-800">
           Welcome Back!
         </h2>
-        <p className="mt-1 text-xs font-medium text-slate-500">
+        <p className="mt-1 text-xs text-slate-500 font-normal">
           Sign in to continue to FERTITRACE
         </p>
       </div>
@@ -91,7 +82,7 @@ export function LoginForm() {
               onFocus={clearError}
               autoComplete="username"
               aria-required
-              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 ${
+              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 ${
                 fieldErrors.username ? 'border-red-400' : 'border-slate-200'
               }`}
             />
@@ -122,7 +113,7 @@ export function LoginForm() {
               onFocus={clearError}
               autoComplete="current-password"
               aria-required
-              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-10 text-sm text-slate-800 placeholder-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 ${
+              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-10 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#6b46c1] focus:ring-2 focus:ring-[#6b46c1]/15 disabled:bg-slate-50 disabled:text-slate-400 ${
                 fieldErrors.password ? 'border-red-400' : 'border-slate-200'
               }`}
             />
@@ -165,11 +156,11 @@ export function LoginForm() {
           </a>
         </div>
 
-        {/* Solid Purple Login Button with Spinner */}
+        {/* Solid Purple Login Button */}
         <button
           type="submit"
           disabled={loading}
-          className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6b46c1] to-[#7c3aed] text-sm font-semibold text-white shadow-md transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-80"
+          className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#6b46c1] hover:bg-[#5b3da0] text-sm font-semibold text-white shadow-sm transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-80"
         >
           {loading ? (
             <>
@@ -200,7 +191,7 @@ export function LoginForm() {
             setUsername('admin');
             setPassword('admin123');
           }}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-[#6b46c1] hover:bg-slate-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-[#6b46c1] hover:bg-purple-50/50 hover:border-[#6b46c1]/50 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="h-4 w-4 text-[#6b46c1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <rect x="2" y="5" width="20" height="14" rx="2" />
@@ -215,6 +206,7 @@ export function LoginForm() {
         <div className="flex items-center justify-center gap-1.5 font-medium text-slate-600">
           <svg className="h-3.5 w-3.5 text-[#6b46c1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <path d="M9 12l2 2 4-4" />
           </svg>
           <span>Secure. Compliant. Confidential.</span>
         </div>
