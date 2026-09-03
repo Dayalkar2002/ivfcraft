@@ -18,6 +18,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { user, logout } = useAuth();
   const { selectedPatient } = usePatient();
   const [showPatientModal, setShowPatientModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
@@ -69,16 +70,24 @@ export function AppShell({ children }: { children: ReactNode }) {
               {SIDE_NAV_SECTIONS.map((section) => (
                 <div key={section.title} className="space-y-1">
                   {section.items.map((item) => {
+                    if (item.label === 'Logout') {
+                      return (
+                        <button
+                          key={item.label}
+                          type="button"
+                          onClick={() => setShowLogoutModal(true)}
+                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-all"
+                        >
+                          <NavIcon name={item.icon} className="h-4 w-4 shrink-0 opacity-90" />
+                          <span className="truncate">{item.label}</span>
+                        </button>
+                      );
+                    }
                     const active = isActive(item.route);
                     return (
                       <Link
                         key={item.label}
                         href={item.route}
-                        onClick={() => {
-                          if (item.label === 'Logout') {
-                            logout();
-                          }
-                        }}
                         className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
                           active
                             ? 'bg-[#6b46c1] text-white shadow-md font-semibold'
@@ -137,7 +146,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   </div>
                 </Link>
 
-                {/* Top Navigation Bar (Restored Previous Top Menu) */}
+                {/* Top Navigation Bar */}
                 <div className="ml-2 hidden lg:block">
                   <TopNav />
                 </div>
@@ -221,8 +230,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                       <button
                         type="button"
                         onClick={() => {
-                          logout();
                           setUserDropdownOpen(false);
+                          setShowLogoutModal(true);
                         }}
                         className="w-full px-4 py-2 text-left text-xs font-medium text-red-600 hover:bg-red-50"
                       >
@@ -251,6 +260,46 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
 
       <PatientSelectModal open={showPatientModal} onClose={() => setShowPatientModal(false)} />
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-slate-900/5">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </div>
+
+            <h3 className="text-center text-lg font-bold text-slate-900">Confirm Logout</h3>
+            <p className="mt-1 text-center text-xs text-slate-500 font-medium">
+              Are you sure you want to logout from FERTITRACE?
+            </p>
+
+            <div className="mt-6 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowLogoutModal(false)}
+                className="flex-1 rounded-xl border border-slate-300 bg-white py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowLogoutModal(false);
+                  logout();
+                }}
+                className="flex-1 rounded-xl bg-red-600 hover:bg-red-700 py-2.5 text-xs font-semibold text-white shadow-sm transition"
+              >
+                Yes, Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

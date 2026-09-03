@@ -87,7 +87,7 @@ export function IuiList() {
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row) => {
+                {(rows || []).map((row) => {
                   const iuiOId = Number(row.IUIOID ?? 0);
                   const locked = asBool(row.IsLock);
                   return (
@@ -128,7 +128,7 @@ export function IuiList() {
                     </tr>
                   );
                 })}
-                {!loading && rows.length === 0 && (
+                {!loading && (!rows || rows.length === 0) && (
                   <tr>
                     <td colSpan={9} className="px-3 py-6 text-center text-slate-500">
                       No IUI records found for this patient.

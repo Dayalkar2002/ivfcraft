@@ -92,8 +92,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setToken(null);
     setError(null);
-    router.push('/login');
-  }, [router]);
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+  }, []);
 
   const clearError = useCallback(() => setError(null), []);
 

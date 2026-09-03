@@ -33,7 +33,7 @@ export async function fetchDashboardSummary(
   if (opts?.satId) params.set('satId', String(opts.satId));
   const qs = params.toString();
   const res = await apiFetch<{ success: boolean; data: DashboardSummary }>(
-    `/dashboard/summary${qs ? `?${qs}` : ''}`,
+    `/dashboard${qs ? `?${qs}` : ''}`,
     {},
     token
   );

@@ -32,13 +32,13 @@ export function LoginForm() {
       {/* Top Animated Progress Bar while Loading */}
       {loading && (
         <div className="absolute -top-7 -left-7 -right-7 h-1 bg-purple-100 overflow-hidden rounded-t-[32px]">
-          <div className="h-full bg-[#6345A6] animate-pulse w-full" />
+          <div className="h-full bg-gradient-to-r from-[#6345A6] to-[#8b5cf6] animate-pulse w-full" />
         </div>
       )}
 
       {/* Vibrant Gradient Lock Shield Badge */}
       <div className="mb-6 text-center">
-        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#6345A6] to-[#7A3DB8] text-white shadow-md shadow-purple-600/25">
+        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#6345A6] via-[#7c3aed] to-[#9333ea] text-white shadow-lg shadow-purple-600/30 transition-transform hover:scale-105">
           <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fillOpacity="0.2" />
             <rect x="9" y="11" width="6" height="5" rx="1" fill="currentColor" />
@@ -55,7 +55,7 @@ export function LoginForm() {
 
       {error && (
         <div
-          className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600 text-center"
+          className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600 text-center shadow-2xs"
           role="alert"
         >
           {error}
@@ -65,8 +65,8 @@ export function LoginForm() {
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
         {/* Username / Email Input */}
         <div>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+          <div className="relative group">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-[#6345A6] transition-colors">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <circle cx="12" cy="8" r="4" />
                 <path d="M6 21v-2a6 6 0 0 1 12 0v2" />
@@ -82,8 +82,8 @@ export function LoginForm() {
               onFocus={clearError}
               autoComplete="username"
               aria-required
-              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#6345A6] focus:ring-2 focus:ring-[#6345A6]/15 disabled:bg-slate-50 disabled:text-slate-400 [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:#1e293b] ${
-                fieldErrors.username ? 'border-red-400' : 'border-slate-200'
+              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-[#6345A6] focus:ring-4 focus:ring-[#6345A6]/10 disabled:bg-slate-50 disabled:text-slate-400 [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:#1e293b] ${
+                fieldErrors.username ? 'border-red-400' : 'border-slate-200/90'
               }`}
             />
           </div>
@@ -96,8 +96,8 @@ export function LoginForm() {
 
         {/* Password Input */}
         <div>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+          <div className="relative group">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-[#6345A6] transition-colors">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -113,14 +113,14 @@ export function LoginForm() {
               onFocus={clearError}
               autoComplete="current-password"
               aria-required
-              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-10 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#6345A6] focus:ring-2 focus:ring-[#6345A6]/15 disabled:bg-slate-50 disabled:text-slate-400 [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:#1e293b] ${
-                fieldErrors.password ? 'border-red-400' : 'border-slate-200'
+              className={`h-11 w-full rounded-xl border bg-white pl-10 pr-10 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-[#6345A6] focus:ring-4 focus:ring-[#6345A6]/10 disabled:bg-slate-50 disabled:text-slate-400 [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:#1e293b] ${
+                fieldErrors.password ? 'border-red-400' : 'border-slate-200/90'
               }`}
             />
             <button
               type="button"
               disabled={loading}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 disabled:opacity-50"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 disabled:opacity-50 transition-colors"
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
@@ -139,7 +139,7 @@ export function LoginForm() {
 
         {/* Remember Me & Forgot Password */}
         <div className="flex items-center justify-between pt-1">
-          <label className="flex items-center gap-2 cursor-pointer">
+          <label className="flex items-center gap-2 cursor-pointer select-none">
             <input
               type="checkbox"
               disabled={loading}
@@ -150,7 +150,7 @@ export function LoginForm() {
           <a
             href="#"
             onClick={(e) => e.preventDefault()}
-            className="text-xs font-semibold text-[#6345A6] hover:underline"
+            className="text-xs font-semibold text-[#6345A6] hover:text-[#543993] hover:underline transition-colors"
           >
             Forgot Password?
           </a>
@@ -160,7 +160,7 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6345A6] to-[#7A3DB8] hover:from-[#543993] hover:to-[#6b33a5] text-sm font-semibold text-white shadow-md shadow-purple-600/20 transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-80"
+          className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6345A6] via-[#7c3aed] to-[#8b5cf6] hover:from-[#543993] hover:to-[#7033a5] text-sm font-semibold text-white shadow-md shadow-purple-600/25 transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-80"
         >
           {loading ? (
             <>
@@ -178,7 +178,7 @@ export function LoginForm() {
         {/* Divider */}
         <div className="relative my-4 text-center">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-200" />
+            <div className="w-full border-t border-slate-200/80" />
           </div>
           <span className="relative bg-white px-3 text-xs text-slate-400">or</span>
         </div>
@@ -191,7 +191,7 @@ export function LoginForm() {
             setUsername('admin');
             setPassword('admin123');
           }}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-[#6345A6] hover:bg-purple-50/50 hover:border-[#6345A6]/40 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-purple-200/80 bg-white text-xs font-semibold text-[#6345A6] hover:bg-purple-50/70 hover:border-purple-300 shadow-2xs transition active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="h-4 w-4 text-[#6345A6]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <rect x="2" y="5" width="20" height="14" rx="2" />

@@ -18,7 +18,7 @@ export async function listIui(token: string, patId: number, satId: number): Prom
     {},
     token
   );
-  return res.data;
+  return res.data || [];
 }
 
 export async function loadIuiOutcome(
