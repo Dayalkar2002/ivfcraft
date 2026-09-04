@@ -13,6 +13,15 @@ import { useRouter } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import type { AuthUser, LoginResponse } from '@/lib/types/auth';
 
+import { useAppDispatch } from '@/store/hooks';
+import {
+  hydrateAuth,
+  setCredentials,
+  logout as reduxLogout,
+  setAuthError,
+  setAuthLoading,
+} from '@/store/slices/authSlice';
+
 const TOKEN_KEY = 'smart_ivf_token';
 const USER_KEY = 'smart_ivf_user';
 
@@ -43,6 +52,7 @@ function readStoredAuth(): { token: string | null; user: AuthUser | null } {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -54,12 +64,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(stored.token);
     setUser(stored.user);
     setHydrated(true);
-  }, []);
+    dispatch(hydrateAuth(stored));
+  }, [dispatch]);
 
   const login = useCallback(
     async (username: string, password: string) => {
       setLoading(true);
       setError(null);
+      dispatch(setAuthLoading(true));
       try {
         const res = await apiFetch<LoginResponse>('/auth/login', {
           method: 'POST',
@@ -74,16 +86,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(USER_KEY, JSON.stringify(res.user));
         setToken(res.token);
         setUser(res.user);
+        dispatch(setCredentials({ user: res.user, token: res.token }));
         router.push('/dashboard');
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Login failed.';
         setError(message);
+        dispatch(setAuthError(message));
         throw err;
       } finally {
         setLoading(false);
+        dispatch(setAuthLoading(false));
       }
     },
-    [router]
+    [router, dispatch]
   );
 
   const logout = useCallback(() => {
@@ -92,10 +107,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setToken(null);
     setError(null);
+    dispatch(reduxLogout());
     if (typeof window !== 'undefined') {
       window.location.href = '/login';
     }
-  }, []);
+  }, [dispatch]);
 
   const clearError = useCallback(() => setError(null), []);
 

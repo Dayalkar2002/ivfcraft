@@ -5,15 +5,21 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { usePatient } from '@/contexts/patient-context';
 import { NavIcon } from '@/components/nav-icons';
-import { fetchDashboardSummary, DashboardSummary } from '@/lib/services/dashboard';
+import { fetchDashboardSummary } from '@/lib/services/dashboard';
 import { listMasterPatients } from '@/lib/services/masters';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {
+  setDashboardSummary,
+  setDashboardPatientCount,
+  setDashboardLoading,
+  setDashboardError,
+} from '@/store/slices/dashboardSlice';
 
 export default function DashboardPage() {
   const { token, user } = useAuth();
   const { selectedPatient } = usePatient();
-  const [summary, setSummary] = useState<DashboardSummary | null>(null);
-  const [patientCount, setPatientCount] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { summary, patientCount, loading } = useAppSelector((state) => state.dashboard);
   const [currentTime, setCurrentTime] = useState<string>('');
   const [currentDate, setCurrentDate] = useState<string>('');
 
@@ -44,10 +50,10 @@ export default function DashboardPage() {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch dynamic stats from backend API
+  // Fetch dynamic stats from backend API and save to Redux
   const loadStats = useCallback(async () => {
     if (!token) return;
-    setLoading(true);
+    dispatch(setDashboardLoading(true));
     try {
       const [sumRes, patRes] = await Promise.allSettled([
         fetchDashboardSummary(token, { patId: selectedPatient?.id }),
@@ -55,17 +61,18 @@ export default function DashboardPage() {
       ]);
 
       if (sumRes.status === 'fulfilled' && sumRes.value) {
-        setSummary(sumRes.value);
+        dispatch(setDashboardSummary(sumRes.value));
       }
       if (patRes.status === 'fulfilled' && patRes.value) {
-        setPatientCount(patRes.value.length);
+        dispatch(setDashboardPatientCount(patRes.value.length));
       }
     } catch (err) {
       console.error('Failed to load dashboard stats:', err);
+      dispatch(setDashboardError(err instanceof Error ? err.message : 'Failed to load stats.'));
     } finally {
-      setLoading(false);
+      dispatch(setDashboardLoading(false));
     }
-  }, [token, selectedPatient?.id]);
+  }, [token, selectedPatient?.id, dispatch]);
 
   useEffect(() => {
     void loadStats();

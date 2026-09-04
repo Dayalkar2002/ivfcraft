@@ -11,22 +11,27 @@ import { TopNav } from '@/components/top-nav';
 import { NavIcon } from '@/components/nav-icons';
 import { SmartLogo } from '@/components/smart-logo';
 import { SIDE_NAV_SECTIONS } from '@/lib/nav-config';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {
+  toggleSidebar,
+  setShowPatientModal,
+  setShowLogoutModal,
+} from '@/store/slices/uiSlice';
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
+  const { sidebarOpen, showPatientModal, showLogoutModal } = useAppSelector((state) => state.ui);
   const { user, logout } = useAuth();
   const { selectedPatient } = usePatient();
-  const [showPatientModal, setShowPatientModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (searchParams.get('selectPatient') === '1') {
-      setShowPatientModal(true);
+      dispatch(setShowPatientModal(true));
     }
-  }, [searchParams]);
+  }, [searchParams, dispatch]);
 
   function isActive(route: string): boolean {
     const base = route.split('?')[0];
@@ -75,7 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                         <button
                           key={item.label}
                           type="button"
-                          onClick={() => setShowLogoutModal(true)}
+                          onClick={() => dispatch(setShowLogoutModal(true))}
                           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-all"
                         >
                           <NavIcon name={item.icon} className="h-4 w-4 shrink-0 opacity-90" />
@@ -120,7 +125,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <div className="flex items-center gap-3 md:gap-4">
                 <button
                   type="button"
-                  onClick={() => setSidebarOpen((v) => !v)}
+                  onClick={() => dispatch(toggleSidebar())}
                   className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 transition"
                   aria-label="Toggle sidebar"
                 >
@@ -156,7 +161,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <div className="flex items-center gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowPatientModal(true)}
+                  onClick={() => dispatch(setShowPatientModal(true))}
                   className="hidden rounded-xl border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-semibold text-[#6b46c1] hover:bg-purple-100 sm:inline-flex"
                 >
                   {selectedPatient ? 'Change Patient' : 'Select Patient'}
@@ -220,7 +225,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                       <button
                         type="button"
                         onClick={() => {
-                          setShowPatientModal(true);
+                          dispatch(setShowPatientModal(true));
                           setUserDropdownOpen(false);
                         }}
                         className="w-full px-4 py-2 text-left text-xs font-medium text-slate-700 hover:bg-slate-50"
@@ -231,7 +236,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                         type="button"
                         onClick={() => {
                           setUserDropdownOpen(false);
-                          setShowLogoutModal(true);
+                          dispatch(setShowLogoutModal(true));
                         }}
                         className="w-full px-4 py-2 text-left text-xs font-medium text-red-600 hover:bg-red-50"
                       >
@@ -249,7 +254,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="border-b border-slate-200/80 bg-white px-5 py-2">
               <PatientContextBar
                 patient={selectedPatient}
-                onSelectPatient={() => setShowPatientModal(true)}
+                onSelectPatient={() => dispatch(setShowPatientModal(true))}
               />
             </div>
           )}
@@ -259,7 +264,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <PatientSelectModal open={showPatientModal} onClose={() => setShowPatientModal(false)} />
+      <PatientSelectModal open={showPatientModal} onClose={() => dispatch(setShowPatientModal(false))} />
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
@@ -281,7 +286,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="mt-6 flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => setShowLogoutModal(false)}
+                onClick={() => dispatch(setShowLogoutModal(false))}
                 className="flex-1 rounded-xl border border-slate-300 bg-white py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition"
               >
                 Cancel
@@ -289,7 +294,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => {
-                  setShowLogoutModal(false);
+                  dispatch(setShowLogoutModal(false));
                   logout();
                 }}
                 className="flex-1 rounded-xl bg-red-600 hover:bg-red-700 py-2.5 text-xs font-semibold text-white shadow-sm transition"

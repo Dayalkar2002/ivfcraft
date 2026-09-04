@@ -12,6 +12,17 @@ import { useAuth } from '@/contexts/auth-context';
 import { fetchSatellites, searchPatients } from '@/lib/services/patients';
 import type { Patient, Satellite } from '@/lib/types/patient';
 
+import { useAppDispatch } from '@/store/hooks';
+import {
+  setSelectedPatient as setReduxPatient,
+  setSelectedSatellite as setReduxSatellite,
+  setSatellites as setReduxSatellites,
+  setPatients as setReduxPatients,
+  setPatientLoading as setReduxPatientLoading,
+  setPatientError as setReduxPatientError,
+  clearSelectedPatient as clearReduxPatient,
+} from '@/store/slices/patientSlice';
+
 interface PatientContextValue {
   selectedPatient: Patient | null;
   selectedSatellite: Satellite | null;
@@ -30,6 +41,7 @@ const PatientContext = createContext<PatientContextValue | null>(null);
 
 export function PatientProvider({ children }: { children: ReactNode }) {
   const { token } = useAuth();
+  const dispatch = useAppDispatch();
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedSatellite, setSelectedSatellite] = useState<Satellite | null>(null);
   const [satellites, setSatellites] = useState<Satellite[]>([]);
@@ -43,46 +55,62 @@ export function PatientProvider({ children }: { children: ReactNode }) {
     try {
       const data = await fetchSatellites(token);
       setSatellites(data);
+      dispatch(setReduxSatellites(data));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load satellites.');
+      const msg = err instanceof Error ? err.message : 'Failed to load satellites.';
+      setError(msg);
+      dispatch(setReduxPatientError(msg));
     }
-  }, [token]);
+  }, [token, dispatch]);
 
   const loadPatients = useCallback(
     async (satelliteId: number) => {
       if (!token) return;
       setLoading(true);
       setError(null);
+      dispatch(setReduxPatientLoading(true));
       try {
         const data = await searchPatients(token, satelliteId, '');
         setPatients(data);
+        dispatch(setReduxPatients(data));
       } catch (err) {
         setPatients([]);
-        setError(err instanceof Error ? err.message : 'Failed to load patients.');
+        dispatch(setReduxPatients([]));
+        const msg = err instanceof Error ? err.message : 'Failed to load patients.';
+        setError(msg);
+        dispatch(setReduxPatientError(msg));
       } finally {
         setLoading(false);
+        dispatch(setReduxPatientLoading(false));
       }
     },
-    [token]
+    [token, dispatch]
   );
 
-  const selectSatellite = useCallback((satellite: Satellite) => {
-    setSelectedSatellite(satellite);
-  }, []);
+  const selectSatellite = useCallback(
+    (satellite: Satellite) => {
+      setSelectedSatellite(satellite);
+      dispatch(setReduxSatellite(satellite));
+    },
+    [dispatch]
+  );
 
   const selectPatient = useCallback(
     (patient: Patient) => {
-      setSelectedPatient({
+      const fullPatient = {
         ...patient,
         satelliteId: patient.satelliteId || selectedSatellite?.id || 0,
-      });
+      };
+      setSelectedPatient(fullPatient);
+      dispatch(setReduxPatient(fullPatient));
     },
-    [selectedSatellite]
+    [selectedSatellite, dispatch]
   );
 
   const clearPatient = useCallback(() => {
     setSelectedPatient(null);
-  }, []);
+    dispatch(clearReduxPatient());
+  }, [dispatch]);
 
   const value = useMemo(
     () => ({
